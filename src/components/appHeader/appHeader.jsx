@@ -1,38 +1,35 @@
-import React from 'react';
 import appHeaderStyles from './appHeader.module.css';
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import MenuItem from './menuItem/menuItem';
 
-class AppHeader extends React.Component {
-  render() {
+const AppHeader = () => {
     return (
-      <header className={`${appHeaderStyles.appHeader} text text_type_main-default pt-4 pb-4`}>
-        <nav className={appHeaderStyles.appHeader__menu}>
-          <ul className={appHeaderStyles['appHeader__menu-items']}>
-            <MenuItem
-              className={`${appHeaderStyles['appHeader__menu-item']} pt-4 pb-4 pr-5 pl-5 mr-2`}
-              text="Конструктор"
-              icon={BurgerIcon}
-              isActive
-            />
-            <MenuItem
-              className={`${appHeaderStyles['appHeader__menu-item']} pt-4 pb-4 pr-5 pl-5`}
-              text="Лента заказов"
-              icon={ListIcon}
-            />
-            <li className={appHeaderStyles['appHeader__logo']}>
-              <Logo/>
-            </li>
-            <MenuItem
-              className={`${appHeaderStyles['appHeader__menu-item']} pt-4 pb-4 pr-5 pl-5`}
-              text="Личный кабинет"
-              icon={ProfileIcon}
-            />
-          </ul>
-        </nav>
-      </header>
+        <header className={`${appHeaderStyles.appHeader} text text_type_main-default pt-4 pb-4`}>
+            <nav className={appHeaderStyles.appHeader__menu}>
+                <ul className={appHeaderStyles['appHeader__menu-items']}>
+                    <MenuItem
+                        className={`${appHeaderStyles['appHeader__menu-item']} pt-4 pb-4 pr-5 pl-5 mr-2`}
+                        text="Конструктор"
+                        icon={BurgerIcon}
+                        isActive
+                    />
+                    <MenuItem
+                        className={`${appHeaderStyles['appHeader__menu-item']} pt-4 pb-4 pr-5 pl-5`}
+                        text="Лента заказов"
+                        icon={ListIcon}
+                    />
+                    <li className={appHeaderStyles['appHeader__logo']}>
+                        <Logo />
+                    </li>
+                    <MenuItem
+                        className={`${appHeaderStyles['appHeader__menu-item']} pt-4 pb-4 pr-5 pl-5`}
+                        text="Личный кабинет"
+                        icon={ProfileIcon}
+                    />
+                </ul>
+            </nav>
+        </header>
     );
-  }
-}
+};
 
 export default AppHeader;

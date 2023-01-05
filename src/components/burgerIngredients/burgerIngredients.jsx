@@ -3,7 +3,7 @@ import burgerIngredientsStyles from './burgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import BurgerIngredientType from '../burgerIngredientType/burgerIngredientType';
 
-function BurgerIngredients() {
+const BurgerIngredients = () => {
   const [current, setCurrent] = React.useState('bun');
   return (
     <section className={`${burgerIngredientsStyles['burger-ingredients']} pt-10 pb-10`}>
