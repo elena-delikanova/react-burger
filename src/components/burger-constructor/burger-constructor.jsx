@@ -1,4 +1,4 @@
-import burgerConstructorStyles from './burgerConstructor.module.css';
+import burgerConstructorStyles from './burger-constructor.module.css';
 import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ingredients } from '../../utils/data';
 

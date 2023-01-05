@@ -1,7 +1,7 @@
 import React from 'react';
-import burgerIngredientsStyles from './burgerIngredients.module.css';
+import burgerIngredientsStyles from './burger-ingredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import BurgerIngredientType from '../burgerIngredientType/burgerIngredientType';
+import BurgerIngredientType from '../burger-ingredient-type/burger-ingredient-type';
 
 const BurgerIngredients = () => {
   const [current, setCurrent] = React.useState('bun');

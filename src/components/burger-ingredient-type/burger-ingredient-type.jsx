@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import burgerIngredientTypeStyles from './burgerIngredientType.module.css';
-import BurgerIngredient from '../burgerIngredient/burgerIngredient';
+import burgerIngredientTypeStyles from './burger-ingredient-type.module.css';
+import BurgerIngredient from '../burger-ingredient/burger-ingredient';
 import { ingredients } from '../../utils/data';
 
 const BurgerIngredientType = (props) => {

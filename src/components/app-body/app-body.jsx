@@ -1,6 +1,6 @@
-import BurgerIngredients from '../burgerIngredients/burgerIngredients';
-import BurgerConstructor from '../burgerConstructor/burgerConstructor';
-import appBodyStyles from './appBody.module.css';
+import BurgerIngredients from '../burger-ingredients/burger-ingredients';
+import BurgerConstructor from '../burger-constructor/burger-constructor';
+import appBodyStyles from './app-body.module.css';
 
 const AppBody = () => {
     return (
