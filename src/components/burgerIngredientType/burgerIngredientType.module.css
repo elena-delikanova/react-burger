@@ -2,7 +2,5 @@
     list-style: none;
     display: grid;
     overflow-y: auto;
-    max-height: 100%;
     grid-template-columns: repeat(2, 1fr);
-    gap: 32px 24px;
 }

@@ -49,3 +49,8 @@
     display: flex;
     flex-direction: row;
 }
+
+.burger-constructor__amount-container svg {
+    width: 36px;
+    height: 36px;
+}

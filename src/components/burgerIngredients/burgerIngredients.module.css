@@ -2,6 +2,8 @@
     width: 600px;
     max-height: calc(100vh - 88px);
     box-sizing: border-box;
+    display: grid;
+    grid-template-rows: repeat(2, min-content) minmax(0, 1fr);
 }
 
 .burger-ingredients__menu {
@@ -14,7 +16,6 @@
     margin: 0;
     list-style: none;
     overflow: auto;
-    max-height: calc(100% - 116px);
 }
 
 .burger-ingredients__types-list::-webkit-scrollbar {
