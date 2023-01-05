@@ -41,6 +41,7 @@ const BurgerConstructor = () => {
                                     className={`${burgerConstructorStyles['burger-constructor__filling']} ${
                                         index === 0 ? '' : 'pt-4'
                                     } pr-2`}
+                                    key={ingredient._id}
                                 >
                                     <DragIcon />
                                     <ConstructorElement

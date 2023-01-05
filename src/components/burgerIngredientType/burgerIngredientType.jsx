@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import burgerIngredientTypeStyles from './burgerIngredientType.module.css';
 import BurgerIngredient from '../burgerIngredient/burgerIngredient';
 import { ingredients } from '../../utils/data';
@@ -20,5 +21,10 @@ const BurgerIngredientType = (props) => {
         </li>
     );
 };
+
+BurgerIngredientType.propTypes = {
+    type: PropTypes.string.isRequired,
+    typeName: PropTypes.string.isRequired,
+}
 
 export default BurgerIngredientType;

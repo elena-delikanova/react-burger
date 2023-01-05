@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const MenuItem = (props) => {
     const { className, text, icon, isActive } = props;
 
@@ -9,5 +11,12 @@ const MenuItem = (props) => {
         </li>
     );
 };
+
+MenuItem.propTypes = {
+    className: PropTypes.string,
+    text: PropTypes.string.isRequired,
+    isActive: PropTypes.bool,
+    icon: PropTypes.func.isRequired,
+}
 
 export default MenuItem;
