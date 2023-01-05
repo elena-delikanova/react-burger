@@ -21,11 +21,13 @@
     width: 8px;
 }
 
-.burger-ingredients__types-list::-webkit-scrollbar-thumb { /* Foreground */
+.burger-ingredients__types-list::-webkit-scrollbar-thumb {
+    /* Foreground */
     background: #8585AD;
     border-radius: 6px;
-  }
+}
 
-.burger-ingredients__types-list::-webkit-scrollbar-track { /* Background */
+.burger-ingredients__types-list::-webkit-scrollbar-track {
+    /* Background */
     background: #2F2F37;
-  }
+}

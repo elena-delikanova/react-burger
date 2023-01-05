@@ -1,16 +1,14 @@
 import React from 'react';
 import burgerIngredientsStyles from './burgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import BurgerIngredient from '../burgerIngredient/burgerIngredient';
 import BurgerIngredientType from '../burgerIngredientType/burgerIngredientType';
-import { ingredients } from '../../utils/data';
 
 function BurgerIngredients() {
   const [current, setCurrent] = React.useState('bun');
   return (
     <section className={`${burgerIngredientsStyles['burger-ingredients']} pt-10 pb-10`}>
       <h2 className={`text text_type_main-large`}>Соберите бургер</h2>
-      <nav className={`${burgerIngredientsStyles['burger-ingredients__menu']} pt-10 pb-5`}>
+      <nav className={`${burgerIngredientsStyles['burger-ingredients__menu']} pt-5 pb-10`}>
         <Tab value="bun" active={current === 'bun'} onClick={setCurrent}>
           Булки
         </Tab>
