@@ -24,5 +24,3 @@
 ### Демо
 
 [Демо на GitHub Pages](https://elena-delikanova.github.io/react-burger)
-
-`Note!` Пока не работает из-зв проблем с registry ЯП: не удается установить `gh-pages`
