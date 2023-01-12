@@ -1,9 +1,21 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import modalStyles from './modal.module.css';
 
 const Modal = ({ children, header, onClose }) => {
     const modalElementRef = useRef(null);
+    useEffect(() => {
+        const escapeHandler = (event) => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+        document.addEventListener('keydown', escapeHandler);
+        return () => {
+            document.removeEventListener('keydown', escapeHandler);
+        };
+    });
+
     return (
         <div className={`${modalStyles['modal']}`} ref={modalElementRef}>
             <div className={`${modalStyles['modal__container']} pr-10 pl-10 pt-10 pb-15`}>
@@ -25,21 +37,3 @@ const Modal = ({ children, header, onClose }) => {
 };
 
 export default Modal;
-
-/* class Modal extends React.Component {
-    render() {
-        const { children, header, onClose } = this.props;
-        // Возвращаем ReactDOM.createPortal,
-        // который поместит дочерние элементы в modalRoot
-        return ReactDOM.createPortal(
-            <>
-                <div className="Modal">
-                    <ModalHeader onClose={onClose}>{header}</ModalHeader>
-                    {children}
-                </div>
-                <ModalBackDrop onClose={onClose} />
-            </>,
-            modalRoot,
-        );
-    }
-} */
