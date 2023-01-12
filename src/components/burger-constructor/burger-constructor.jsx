@@ -1,13 +1,16 @@
+import { useContext } from 'react';
 import burgerConstructorStyles from './burger-constructor.module.css';
 import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { ingredients } from '../../utils/data';
+import { Context } from '../../context/context';
 
 const BurgerConstructor = () => {
+    const ingredients = useContext(Context);
     // КОСТЫЛИ ЧИСТО ДЛЯ ВЕРСТКИ, ПОКА НЕТ РЕАЛЬНЫХ ДАННЫХ
     const bun = ingredients.find((ingredient) => {
         return ingredient.type === 'bun';
     });
     const totalPrice =
+        bun &&
         bun.price +
         ingredients.reduce((price, ingredient) => {
             if (ingredient.type !== 'bun') {

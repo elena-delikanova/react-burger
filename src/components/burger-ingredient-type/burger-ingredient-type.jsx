@@ -1,11 +1,12 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import burgerIngredientTypeStyles from './burger-ingredient-type.module.css';
 import BurgerIngredient from '../burger-ingredient/burger-ingredient';
-import { ingredients } from '../../utils/data';
+import { Context } from '../../context/context';
 
 const BurgerIngredientType = (props) => {
+    const ingredients = useContext(Context);
     const { type, typeName } = props;
-
     return (
         <li>
             <h3 className="text text_type_main-medium">{typeName}</h3>
