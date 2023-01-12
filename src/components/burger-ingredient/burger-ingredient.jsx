@@ -4,8 +4,11 @@ import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-c
 
 const BurgerIngredient = (props) => {
     const { image, name, price } = props.data;
+    const onClick = (event) => {
+        props.onClick(event, props.data);
+    };
     return (
-        <li className={`${burgerIngredientStyles['burger-ingredient__card']}`}>
+        <li className={`${burgerIngredientStyles['burger-ingredient__card']}`} onClick={onClick}>
             <figure className={`${burgerIngredientStyles['burger-ingredient__item']}`}>
                 <img
                     alt={`Изображение ингредиента ${name}`}

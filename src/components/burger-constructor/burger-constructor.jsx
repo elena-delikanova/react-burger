@@ -1,10 +1,16 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import burgerConstructorStyles from './burger-constructor.module.css';
+import Modal from '../modal/modal';
+import OrderDetails from '../order-details/order-details';
 import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Context } from '../../context/context';
+const ORDER_ID = '034536';
 
 const BurgerConstructor = () => {
     const ingredients = useContext(Context);
+    const [state, setState] = useState({
+        isOrderNeedsBeShown: false,
+    });
     // КОСТЫЛИ ЧИСТО ДЛЯ ВЕРСТКИ, ПОКА НЕТ РЕАЛЬНЫХ ДАННЫХ
     const bun = ingredients.find((ingredient) => {
         return ingredient.type === 'bun';
@@ -12,12 +18,20 @@ const BurgerConstructor = () => {
     const totalPrice =
         bun &&
         bun.price +
-        ingredients.reduce((price, ingredient) => {
-            if (ingredient.type !== 'bun') {
-                price += ingredient.price;
-            }
-            return price;
-        }, 0);
+            ingredients.reduce((price, ingredient) => {
+                if (ingredient.type !== 'bun') {
+                    price += ingredient.price;
+                }
+                return price;
+            }, 0);
+
+    const sendOrderHandler = () => {
+        setState({ ...state, isOrderNeedsBeShown: true });
+    };
+    const closeOrderDetails = () => {
+        setState({ ...state, isOrderNeedsBeShown: false });
+    };
+
     return (
         <section className={`${burgerConstructorStyles['burger-constructor']} pt-25 pb-10 pl-10`}>
             <section className={`${burgerConstructorStyles['burger-constructor__list']} pb-10`}>
@@ -77,10 +91,15 @@ const BurgerConstructor = () => {
                     <p className={`text text_type_digits-medium pr-2`}>{totalPrice}</p>
                     <CurrencyIcon />
                 </div>
-                <Button htmlType="button" type="primary" size="large">
+                <Button htmlType="button" type="primary" size="large" onClick={sendOrderHandler}>
                     Оформить заказ
                 </Button>
             </section>
+            {state.isOrderNeedsBeShown && (
+                <Modal onClose={closeOrderDetails}>
+                    <OrderDetails orderId={ORDER_ID} />
+                </Modal>
+            )}
         </section>
     );
 };
