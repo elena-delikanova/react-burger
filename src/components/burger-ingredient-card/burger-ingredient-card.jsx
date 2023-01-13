@@ -1,4 +1,5 @@
 import burgerIngredientCardStyles from './burger-ingredient-card.module.css';
+import PropTypes from 'prop-types';
 
 const BurgerIngredientDetailedInfo = (props) => {
     const { name, image_large, proteins, fat, carbohydrates, calories } = props.ingredient;
@@ -36,6 +37,17 @@ const BurgerIngredientDetailedInfo = (props) => {
             </table>
         </div>
     );
+};
+
+BurgerIngredientDetailedInfo.propTypes = {
+    ingredient: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        image_large: PropTypes.string.isRequired,
+        proteins: PropTypes.number.isRequired,
+        fat: PropTypes.number.isRequired,
+        carbohydrates: PropTypes.number.isRequired,
+        calories: PropTypes.number.isRequired,
+    }).isRequired,
 };
 
 export default BurgerIngredientDetailedInfo;
