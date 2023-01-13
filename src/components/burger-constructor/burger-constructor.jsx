@@ -4,6 +4,7 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Context } from '../../context/context';
+import { nanoid } from 'nanoid';
 const ORDER_ID = '034536';
 
 const BurgerConstructor = () => {
@@ -58,11 +59,11 @@ const BurgerConstructor = () => {
                                     className={`${burgerConstructorStyles['burger-constructor__filling']} ${
                                         index === 0 ? '' : 'pt-4'
                                     } pr-2`}
-                                    key={ingredient._id}
+                                    key={nanoid()}
                                 >
                                     <DragIcon />
                                     <ConstructorElement
-                                        key={index}
+                                        key={nanoid()}
                                         text={ingredient.name}
                                         price={ingredient.price}
                                         thumbnail={ingredient.image}

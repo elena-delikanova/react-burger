@@ -5,6 +5,7 @@ import BurgerIngredient from '../burger-ingredient/burger-ingredient';
 import Modal from '../modal/modal';
 import BurgerIngredientCard from '../burger-ingredient-card/burger-ingredient-card';
 import { Context } from '../../context/context';
+import { nanoid } from 'nanoid';
 
 const BurgerIngredientType = (props) => {
     const ingredients = useContext(Context);
@@ -16,7 +17,7 @@ const BurgerIngredientType = (props) => {
     };
     const closeIngredientCard = () => {
         setSelectedIngredient(null);
-    }
+    };
     return (
         <>
             <li>
@@ -27,7 +28,13 @@ const BurgerIngredientType = (props) => {
                             return ingredient.type === type;
                         })
                         .map((ingredient) => {
-                            return <BurgerIngredient key={ingredient._id} data={ingredient} onClick={ingredientClickHandler}></BurgerIngredient>;
+                            return (
+                                <BurgerIngredient
+                                    key={nanoid()}
+                                    data={ingredient}
+                                    onClick={ingredientClickHandler}
+                                ></BurgerIngredient>
+                            );
                         })}
                 </ul>
             </li>
@@ -43,6 +50,6 @@ const BurgerIngredientType = (props) => {
 BurgerIngredientType.propTypes = {
     type: PropTypes.string.isRequired,
     typeName: PropTypes.string.isRequired,
-}
+};
 
 export default BurgerIngredientType;

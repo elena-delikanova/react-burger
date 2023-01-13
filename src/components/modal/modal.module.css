@@ -1,6 +1,4 @@
 .modal {
-    /* visibility: hidden;
-    opacity: 0; */
     visibility: visible;
     opacity: 1;
     transition: visibility 0.3s, opacity 0.3s ease;
@@ -14,25 +12,13 @@
     justify-content: center;
 }
 
-.modal::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #000000;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
-    cursor: pointer;
-}
-
 .modal__container {
     position: relative;
     background-color: #1C1C21;
     border: 1px solid #4C4CFF;
     border-radius: 40px;
     width: 720px;
+    z-index: 2;
 }
 
 .modal__container:focus {
