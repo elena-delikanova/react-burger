@@ -15,7 +15,7 @@ const BurgerIngredient = (props) => {
                     alt={`Изображение ингредиента ${name}`}
                     src={image}
                     className={`${burgerIngredientStyles['burger-ingredient__image']} pr-4 pl-4`}
-                ></img>
+                />
                 <div className={`${burgerIngredientStyles['burger-ingredient__price-container']} pt-1 pb-1`}>
                     <p
                         className={`${burgerIngredientStyles['burger-ingredient__price']} text text_type_digits-default pr-2`}

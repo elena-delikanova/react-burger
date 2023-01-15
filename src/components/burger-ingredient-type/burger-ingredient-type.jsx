@@ -33,7 +33,7 @@ const BurgerIngredientType = (props) => {
                                     key={ingredient._id}
                                     data={ingredient}
                                     onClick={ingredientClickHandler}
-                                ></BurgerIngredient>
+                                />
                             );
                         })}
                 </ul>
