@@ -30,7 +30,7 @@ const BurgerIngredientType = (props) => {
                         .map((ingredient) => {
                             return (
                                 <BurgerIngredient
-                                    key={nanoid()}
+                                    key={ingredient._id}
                                     data={ingredient}
                                     onClick={ingredientClickHandler}
                                 ></BurgerIngredient>
