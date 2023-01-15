@@ -3,12 +3,12 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Context } from '../../context/context';
+import { IgredientsContext } from '../../context/igredients-сontext';
 import { nanoid } from 'nanoid';
 const ORDER_ID = '034536';
 
 const BurgerConstructor = () => {
-    const ingredients = useContext(Context);
+    const ingredients = useContext(IgredientsContext);
     const [state, setState] = useState({
         isOrderNeedsBeShown: false,
     });

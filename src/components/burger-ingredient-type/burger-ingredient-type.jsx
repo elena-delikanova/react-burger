@@ -4,11 +4,11 @@ import burgerIngredientTypeStyles from './burger-ingredient-type.module.css';
 import BurgerIngredient from '../burger-ingredient/burger-ingredient';
 import Modal from '../modal/modal';
 import BurgerIngredientCard from '../burger-ingredient-card/burger-ingredient-card';
-import { Context } from '../../context/context';
+import { IgredientsContext } from '../../context/igredients-сontext';
 import { nanoid } from 'nanoid';
 
 const BurgerIngredientType = (props) => {
-    const ingredients = useContext(Context);
+    const ingredients = useContext(IgredientsContext);
     const [selectedIngredient, setSelectedIngredient] = useState(null);
     const { type, typeName } = props;
     const ingredientClickHandler = (event, selectedIngredient) => {

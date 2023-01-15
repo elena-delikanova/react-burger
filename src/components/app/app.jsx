@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import AppHeader from '../app-header/app-header';
 import AppBody from '../app-body/app-body';
 import appStyles from './app.module.css';
-import { Context } from '../../context/context';
+import { IgredientsContext } from '../../context/igredients-сontext';
 import { API_URL, API_HEADERS } from '../../utils/constants';
 import Api from '../api/api';
 import Loader from '../loader/loader';
@@ -34,7 +34,7 @@ const App = () => {
     const { ingredients, isLoading, hasError, isErrorModalOpen } = state;
 
     return (
-        <Context.Provider value={ingredients}>
+        <IgredientsContext.Provider value={ingredients}>
             {isLoading ? (
                 <Loader />
             ) : (
@@ -51,7 +51,7 @@ const App = () => {
                     )}
                 </div>
             )}
-        </Context.Provider>
+        </IgredientsContext.Provider>
     );
 };
 
