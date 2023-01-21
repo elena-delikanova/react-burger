@@ -17,6 +17,6 @@ MenuItem.propTypes = {
     text: PropTypes.string.isRequired,
     isActive: PropTypes.bool,
     icon: PropTypes.func.isRequired,
-}
+};
 
 export default MenuItem;
