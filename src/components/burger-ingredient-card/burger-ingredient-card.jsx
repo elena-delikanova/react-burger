@@ -11,7 +11,7 @@ const BurgerIngredientDetailedInfo = (props) => {
                     alt={`Изображение ингредиента ${name}`}
                     src={image_large}
                     className={`${burgerIngredientCardStyles['burger-ingredient-card__image']} pb-4`}
-                ></img>
+                />
                 <figcaption
                     className={`${burgerIngredientCardStyles['burger-ingredient-card__caption']} text text_type_main-medium`}
                 >
