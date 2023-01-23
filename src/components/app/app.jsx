@@ -47,7 +47,7 @@ const App = () => {
                     ) : hasError ? (
                         ''
                     ) : (
-                        <AppBody />
+                        <AppBody api={api}/>
                     )}
                 </div>
             )}

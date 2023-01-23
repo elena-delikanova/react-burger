@@ -5,16 +5,19 @@ import OrderDetails from '../order-details/order-details';
 import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { IgredientsContext } from '../../context/igredients-сontext';
 import { nanoid } from 'nanoid';
-const ORDER_ID = '034536';
 
-const BurgerConstructor = () => {
+const BurgerConstructor = ({ api }) => {
     const ingredients = useContext(IgredientsContext);
     const [state, setState] = useState({
         isOrderNeedsBeShown: false,
+        orderId: null,
     });
     // КОСТЫЛИ ЧИСТО ДЛЯ ВЕРСТКИ, ПОКА НЕТ РЕАЛЬНЫХ ДАННЫХ
     const bun = ingredients.find((ingredient) => {
         return ingredient.type === 'bun';
+    });
+    const selectedIngredients = ingredients.filter((ingredient) => {
+        return ingredient.type !== 'bun';
     });
     const totalPrice =
         bun &&
@@ -27,7 +30,20 @@ const BurgerConstructor = () => {
             }, 0);
 
     const sendOrderHandler = () => {
-        setState({ ...state, isOrderNeedsBeShown: true });
+        const ingredients = [bun._id].concat(
+            selectedIngredients.map((ingredient) => {
+                return ingredient._id;
+            }),
+        );
+        api.setOrder({ ingredients })
+            .then((data) => {
+                console.log(data);
+                setState({ ...state, orderId: data.order.number, isOrderNeedsBeShown: true });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
     };
     const closeOrderDetails = () => {
         setState({ ...state, isOrderNeedsBeShown: false });
@@ -49,29 +65,25 @@ const BurgerConstructor = () => {
                     </div>
                 )}
                 <ul className={`${burgerConstructorStyles['burger-constructor__fillings']}`}>
-                    {ingredients
-                        .filter((ingredient) => {
-                            return ingredient.type !== 'bun';
-                        })
-                        .map((ingredient, index) => {
-                            return (
-                                <li
-                                    className={`${burgerConstructorStyles['burger-constructor__filling']} ${
-                                        index === 0 ? '' : 'pt-4'
-                                    } pr-2`}
+                    {selectedIngredients.map((ingredient, index) => {
+                        return (
+                            <li
+                                className={`${burgerConstructorStyles['burger-constructor__filling']} ${
+                                    index === 0 ? '' : 'pt-4'
+                                } pr-2`}
+                                key={ingredient._id}
+                            >
+                                <DragIcon />
+                                <ConstructorElement
                                     key={ingredient._id}
-                                >
-                                    <DragIcon />
-                                    <ConstructorElement
-                                        key={ingredient._id}
-                                        text={ingredient.name}
-                                        price={ingredient.price}
-                                        thumbnail={ingredient.image}
-                                        extraClass="ml-2"
-                                    />
-                                </li>
-                            );
-                        })}
+                                    text={ingredient.name}
+                                    price={ingredient.price}
+                                    thumbnail={ingredient.image}
+                                    extraClass="ml-2"
+                                />
+                            </li>
+                        );
+                    })}
                 </ul>
 
                 {bun && (
@@ -98,7 +110,7 @@ const BurgerConstructor = () => {
             </section>
             {state.isOrderNeedsBeShown && (
                 <Modal onClose={closeOrderDetails}>
-                    <OrderDetails orderId={ORDER_ID} />
+                    <OrderDetails orderId={state.orderId} />
                 </Modal>
             )}
         </section>

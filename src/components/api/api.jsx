@@ -19,4 +19,13 @@ export default class Api {
     getIngredients() {
         return this._request(`${this._baseUrl}/api/ingredients`, { headers: this._headers });
     }
+
+    setOrder({ ingredients }) {
+        console.log(ingredients)
+        return this._request(`${this._baseUrl}/api/orders`, {
+            method: 'POST',
+            headers: this._headers,
+            body: JSON.stringify({ ingredients }),
+        });
+    }
 }
