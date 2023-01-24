@@ -1,12 +1,42 @@
-import { useContext, useState } from 'react';
+import React, { useContext, useState, useReducer } from 'react';
 import burgerConstructorStyles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { IgredientsContext } from '../../context/igredients-сontext';
 import Api from '../api/api';
+import TotalPrice from '../total-price/total-price';
+import { TotalPriceContext } from '../../context/total-price-context';
 
-const BurgerConstructor = ({ api } : { api: Api}) => {
+function totalPriceReducer(state: { totalPrice: number }, action: { type: string; changedAmount: number }) {
+    switch (action.type) {
+        case 'increment':
+            return { totalPrice: state.totalPrice + action.changedAmount };
+        case 'decrement':
+            return { totalPrice: state.totalPrice - action.changedAmount };
+        default:
+            return state;
+    }
+}
+
+function selectedIngredientsReducer(
+    state: { ingredients: ingredient[] },
+    action: { type: string; ingredient: ingredient },
+) {
+    switch (action.type) {
+        case 'add':
+            return { ingredients: state.ingredients.concat([action.ingredient]) };
+        case 'delete':
+            return {
+                ingredients: state.ingredients.filter((ingredient) => {
+                    return ingredient._id !== action.ingredient._id;
+                }),
+            };
+        default:
+            return state;
+    }
+}
+const BurgerConstructor = ({ api }: { api: Api }) => {
     const ingredients: ingredient[] = useContext(IgredientsContext);
     const initialState: { isOrderNeedsBeShown: boolean; orderId: null | number } = {
         isOrderNeedsBeShown: false,
@@ -20,15 +50,21 @@ const BurgerConstructor = ({ api } : { api: Api}) => {
     const selectedIngredients = ingredients.filter((ingredient) => {
         return ingredient.type !== 'bun';
     });
-    const totalPrice =
-        bun &&
-        bun.price +
-            ingredients.reduce((price, ingredient) => {
-                if (ingredient.type !== 'bun') {
-                    price += ingredient.price;
-                }
-                return price;
-            }, 0);
+    const allIngredients = (bun ? [bun] : []).concat(selectedIngredients);
+    const initialSelectedIngredientsState = { ingredients: allIngredients };
+    const [selectedIngredientsState, selectedIngredientsDispatcher] = useReducer(
+        selectedIngredientsReducer,
+        initialSelectedIngredientsState,
+    );
+    const initialTotalPrice =
+        (bun ? bun.price * 2 : 0) +
+        ingredients.reduce((price, ingredient) => {
+            if (ingredient.type !== 'bun') {
+                price += ingredient.price;
+            }
+            return price;
+        }, 0);
+    const [totalPriceState, totalPriceDispatcher] = useReducer(totalPriceReducer, { totalPrice: initialTotalPrice });
 
     const sendOrderHandler = () => {
         const ingredients = (bun ? [bun._id] : []).concat(
@@ -48,6 +84,15 @@ const BurgerConstructor = ({ api } : { api: Api}) => {
     const closeOrderDetails = () => {
         setState({ ...state, isOrderNeedsBeShown: false });
     };
+    const deleteIngredient = (id: string) => {
+        const ingredientToDelete = ingredients.find((ingredient) => {
+            return ingredient._id === id;
+        });
+        if (ingredientToDelete) {
+            selectedIngredientsDispatcher({ type: 'delete', ingredient: ingredientToDelete });
+            totalPriceDispatcher({ changedAmount: ingredientToDelete.price, type: 'decrement' });
+        }
+    };
 
     return (
         <section className={`${burgerConstructorStyles['burger-constructor']} pt-25 pb-10 pl-10`}>
@@ -65,7 +110,7 @@ const BurgerConstructor = ({ api } : { api: Api}) => {
                     </div>
                 )}
                 <ul className={`${burgerConstructorStyles['burger-constructor__fillings']}`}>
-                    {selectedIngredients.map((ingredient, index) => {
+                    {selectedIngredientsState.ingredients.map((ingredient, index) => {
                         return (
                             <li
                                 className={`${burgerConstructorStyles['burger-constructor__filling']} ${
@@ -80,6 +125,9 @@ const BurgerConstructor = ({ api } : { api: Api}) => {
                                     price={ingredient.price}
                                     thumbnail={ingredient.image}
                                     extraClass="ml-2"
+                                    handleClose={() => {
+                                        deleteIngredient(ingredient._id);
+                                    }}
                                 />
                             </li>
                         );
@@ -100,10 +148,7 @@ const BurgerConstructor = ({ api } : { api: Api}) => {
                 )}
             </section>
             <section className={`${burgerConstructorStyles['burger-constructor__total']} pr-4`}>
-                <div className={`${burgerConstructorStyles['burger-constructor__amount-container']} pr-10`}>
-                    <p className={`text text_type_digits-medium pr-2`}>{totalPrice}</p>
-                    <CurrencyIcon type="primary" />
-                </div>
+                <TotalPrice totalPrice={totalPriceState.totalPrice} />
                 <Button htmlType="button" type="primary" size="large" onClick={sendOrderHandler}>
                     Оформить заказ
                 </Button>
