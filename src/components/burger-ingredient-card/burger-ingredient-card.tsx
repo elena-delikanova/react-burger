@@ -2,8 +2,8 @@ import { IngredientType } from '../../utils/types';
 import burgerIngredientCardStyles from './burger-ingredient-card.module.css';
 import PropTypes from 'prop-types';
 
-const BurgerIngredientDetailedInfo = (props) => {
-    const { name, image_large, proteins, fat, carbohydrates, calories } = props.ingredient;
+const BurgerIngredientDetailedInfo = ({ ingredient }: { ingredient: ingredient }) => {
+    const { name, image_large, proteins, fat, carbohydrates, calories } = ingredient;
     return (
         <div>
             <figure className={`${burgerIngredientCardStyles['burger-ingredient-card__illustration']} pb-8`}>
@@ -18,7 +18,7 @@ const BurgerIngredientDetailedInfo = (props) => {
                     {name}
                 </figcaption>
             </figure>
-            <table className={`${burgerIngredientCardStyles['burger-ingredient-card__nutrients']}`} cols="4">
+            <table className={`${burgerIngredientCardStyles['burger-ingredient-card__nutrients']}`}>
                 <thead className={`pb-2`}>
                     <tr>
                         <th className={`text text_type_main-default pr-5`}>Калории,ккал</th>

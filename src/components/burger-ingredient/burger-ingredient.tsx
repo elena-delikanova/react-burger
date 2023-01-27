@@ -3,13 +3,19 @@ import burgerIngredientStyles from './burger-ingredient.module.css';
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { IngredientType } from '../../utils/types';
 
-const BurgerIngredient = (props) => {
-    const { image, name, price } = props.data;
-    const onClick = (event) => {
-        props.onClick(event, props.data);
-    };
+const BurgerIngredient = ({
+    data,
+    onClick,
+}: {
+    data: ingredient;
+    onClick: (event: React.MouseEvent, selectedIngredient: ingredient) => void;
+}) => {
+    const { image, name, price } = data;
     return (
-        <li className={`${burgerIngredientStyles['burger-ingredient__card']}`} onClick={onClick}>
+        <li
+            className={`${burgerIngredientStyles['burger-ingredient__card']}`}
+            onClick={(event) => onClick(event, data)}
+        >
             <figure className={`${burgerIngredientStyles['burger-ingredient__item']}`}>
                 <img
                     alt={`Изображение ингредиента ${name}`}
@@ -22,7 +28,7 @@ const BurgerIngredient = (props) => {
                     >
                         {price}
                     </p>
-                    <CurrencyIcon />
+                    <CurrencyIcon type="primary" />
                 </div>
                 <figcaption
                     className={`${burgerIngredientStyles['burger-ingredient__name']} text text_type_main-default`}

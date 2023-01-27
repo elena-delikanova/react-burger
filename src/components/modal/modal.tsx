@@ -5,11 +5,11 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import ModalOverlay from './modal-overlay/modal-overlay';
 import modalStyles from './modal.module.css';
 
-const Modal = ({ children, header, onClose }) => {
-    const modalRoot = document.getElementById('modal-root');
-    const modalElementRef = useRef(null);
+const Modal = ({ children, header, onClose }: { children: React.ReactNode; header?: string; onClose: () => void }) => {
+    const modalRoot = document.getElementById('modal-root') as HTMLElement;
+    const modalElementRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
-        const escapeHandler = (event) => {
+        const escapeHandler = (event: any) => {
             if (event.key === 'Escape') {
                 onClose();
             }

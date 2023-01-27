@@ -28,7 +28,7 @@ export default class Api {
         return this._request(`${this._baseUrl}/api/orders`, {
             method: 'POST',
             headers: this._headers,
-            body: JSON.stringify({ ingredientIdentifiers }),
+            body: JSON.stringify({ ingredients: ingredientIdentifiers }),
         });
     }
 }
