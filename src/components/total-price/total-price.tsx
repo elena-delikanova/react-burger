@@ -1,10 +1,13 @@
+import { useContext } from 'react';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import totalPriceStyles from './total-price.module.css';
+import { TotalPriceContext } from '../../context/total-price-context';
 
-const TotalPrice = ({ totalPrice }: { totalPrice: number }) => {
+const TotalPrice = () => {
+    const { totalPriceState } = useContext(TotalPriceContext);
     return (
         <div className={`${totalPriceStyles['total-price-container']} pr-10`}>
-            <p className={`text text_type_digits-medium pr-2`}>{totalPrice}</p>
+            <p className={`text text_type_digits-medium pr-2`}>{totalPriceState.totalPrice}</p>
             <CurrencyIcon type="primary" />
         </div>
     );

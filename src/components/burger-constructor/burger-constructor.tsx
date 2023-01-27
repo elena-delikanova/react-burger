@@ -8,21 +8,21 @@ import Api from '../api/api';
 import TotalPrice from '../total-price/total-price';
 import { TotalPriceContext } from '../../context/total-price-context';
 
-function totalPriceReducer(state: { totalPrice: number }, action: { type: string; changedAmount: number }) {
+const totalPriceReducer = (state: { totalPrice: number }, action: { type: string; changedAmount: number }) => {
     switch (action.type) {
-        case 'increment':
+        case 'add':
             return { totalPrice: state.totalPrice + action.changedAmount };
-        case 'decrement':
+        case 'remove':
             return { totalPrice: state.totalPrice - action.changedAmount };
         default:
             return state;
     }
-}
+};
 
-function selectedIngredientsReducer(
+const selectedIngredientsReducer = (
     state: { ingredients: ingredient[] },
     action: { type: string; ingredient: ingredient },
-) {
+) => {
     switch (action.type) {
         case 'add':
             return { ingredients: state.ingredients.concat([action.ingredient]) };
@@ -35,7 +35,7 @@ function selectedIngredientsReducer(
         default:
             return state;
     }
-}
+};
 const BurgerConstructor = ({ api }: { api: Api }) => {
     const ingredients: ingredient[] = useContext(IgredientsContext);
     const initialState: { isOrderNeedsBeShown: boolean; orderId: null | number } = {
@@ -51,10 +51,9 @@ const BurgerConstructor = ({ api }: { api: Api }) => {
         return ingredient.type !== 'bun';
     });
     const allIngredients = (bun ? [bun] : []).concat(selectedIngredients);
-    const initialSelectedIngredientsState = { ingredients: allIngredients };
     const [selectedIngredientsState, selectedIngredientsDispatcher] = useReducer(
         selectedIngredientsReducer,
-        initialSelectedIngredientsState,
+        { ingredients: allIngredients },
     );
     const initialTotalPrice =
         (bun ? bun.price * 2 : 0) +
@@ -90,75 +89,77 @@ const BurgerConstructor = ({ api }: { api: Api }) => {
         });
         if (ingredientToDelete) {
             selectedIngredientsDispatcher({ type: 'delete', ingredient: ingredientToDelete });
-            totalPriceDispatcher({ changedAmount: ingredientToDelete.price, type: 'decrement' });
+            totalPriceDispatcher({ changedAmount: ingredientToDelete.price, type: 'remove' });
         }
     };
 
     return (
-        <section className={`${burgerConstructorStyles['burger-constructor']} pt-25 pb-10 pl-10`}>
-            <section className={`${burgerConstructorStyles['burger-constructor__list']} pb-10`}>
-                {bun && (
-                    <div>
-                        <ConstructorElement
-                            text={`${bun.name} (верх)`}
-                            isLocked
-                            price={bun.price}
-                            thumbnail={bun.image}
-                            type="top"
-                            extraClass="ml-8 mb-4"
-                        />
-                    </div>
-                )}
-                <ul className={`${burgerConstructorStyles['burger-constructor__fillings']}`}>
-                    {selectedIngredientsState.ingredients.map((ingredient, index) => {
-                        return (
-                            <li
-                                className={`${burgerConstructorStyles['burger-constructor__filling']} ${
-                                    index === 0 ? '' : 'pt-4'
-                                } pr-2`}
-                                key={ingredient._id}
-                            >
-                                <DragIcon type="primary" />
-                                <ConstructorElement
+        <TotalPriceContext.Provider value={{ totalPriceState, totalPriceDispatcher }}>
+            <section className={`${burgerConstructorStyles['burger-constructor']} pt-25 pb-10 pl-10`}>
+                <section className={`${burgerConstructorStyles['burger-constructor__list']} pb-10`}>
+                    {bun && (
+                        <div>
+                            <ConstructorElement
+                                text={`${bun.name} (верх)`}
+                                isLocked
+                                price={bun.price}
+                                thumbnail={bun.image}
+                                type="top"
+                                extraClass="ml-8 mb-4"
+                            />
+                        </div>
+                    )}
+                    <ul className={`${burgerConstructorStyles['burger-constructor__fillings']}`}>
+                        {selectedIngredientsState.ingredients.map((ingredient, index) => {
+                            return (
+                                <li
+                                    className={`${burgerConstructorStyles['burger-constructor__filling']} ${
+                                        index === 0 ? '' : 'pt-4'
+                                    } pr-2`}
                                     key={ingredient._id}
-                                    text={ingredient.name}
-                                    price={ingredient.price}
-                                    thumbnail={ingredient.image}
-                                    extraClass="ml-2"
-                                    handleClose={() => {
-                                        deleteIngredient(ingredient._id);
-                                    }}
-                                />
-                            </li>
-                        );
-                    })}
-                </ul>
+                                >
+                                    <DragIcon type="primary" />
+                                    <ConstructorElement
+                                        key={ingredient._id}
+                                        text={ingredient.name}
+                                        price={ingredient.price}
+                                        thumbnail={ingredient.image}
+                                        extraClass="ml-2"
+                                        handleClose={() => {
+                                            deleteIngredient(ingredient._id);
+                                        }}
+                                    />
+                                </li>
+                            );
+                        })}
+                    </ul>
 
-                {bun && (
-                    <div>
-                        <ConstructorElement
-                            text={`${bun.name} (низ)`}
-                            isLocked
-                            price={bun.price}
-                            thumbnail={bun.image}
-                            type="bottom"
-                            extraClass="ml-8 mt-4"
-                        />
-                    </div>
+                    {bun && (
+                        <div>
+                            <ConstructorElement
+                                text={`${bun.name} (низ)`}
+                                isLocked
+                                price={bun.price}
+                                thumbnail={bun.image}
+                                type="bottom"
+                                extraClass="ml-8 mt-4"
+                            />
+                        </div>
+                    )}
+                </section>
+                <section className={`${burgerConstructorStyles['burger-constructor__total']} pr-4`}>
+                    <TotalPrice />
+                    <Button htmlType="button" type="primary" size="large" onClick={sendOrderHandler}>
+                        Оформить заказ
+                    </Button>
+                </section>
+                {state.isOrderNeedsBeShown && state.orderId && (
+                    <Modal onClose={closeOrderDetails}>
+                        <OrderDetails orderId={state.orderId} />
+                    </Modal>
                 )}
             </section>
-            <section className={`${burgerConstructorStyles['burger-constructor__total']} pr-4`}>
-                <TotalPrice totalPrice={totalPriceState.totalPrice} />
-                <Button htmlType="button" type="primary" size="large" onClick={sendOrderHandler}>
-                    Оформить заказ
-                </Button>
-            </section>
-            {state.isOrderNeedsBeShown && state.orderId && (
-                <Modal onClose={closeOrderDetails}>
-                    <OrderDetails orderId={state.orderId} />
-                </Modal>
-            )}
-        </section>
+        </TotalPriceContext.Provider>
     );
 };
 
