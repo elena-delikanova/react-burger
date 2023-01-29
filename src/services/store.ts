@@ -1,12 +1,12 @@
-import { compose, createStore, applyMiddleware } from 'redux';
-import { rootReducer } from './reducers';
-import thunk from 'redux-thunk';
+import { configureStore } from '@reduxjs/toolkit';
+import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
+import { reducer as burgerReducer } from './reducers/burger';
 
-const composeEnhancers =
-  typeof window === 'object' && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
-    : compose;
+export const store = configureStore({
+    reducer: {
+        burger: burgerReducer,
+    },
+});
 
-const enhancer = composeEnhancers(applyMiddleware(thunk));
-
-export const store = createStore(rootReducer, enhancer);
+export const useAppDispatch : () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

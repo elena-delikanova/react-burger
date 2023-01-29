@@ -1,10 +1,7 @@
-export const initialState: {
-    ingredients: ingredient[],
-    selectedInfredients: ingredient[],
-    currentIngredient: null,
-    currentOrder: null,
-} = {
+export const initialState: initialState = {
     ingredients: [],
+    ingredientsRequest: false,
+    ingredientsFailed: false,
     selectedInfredients: [],
     currentIngredient: null,
     currentOrder: null,

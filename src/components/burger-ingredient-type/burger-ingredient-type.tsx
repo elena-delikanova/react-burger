@@ -1,13 +1,13 @@
 import React, { useContext, useMemo, useState } from 'react';
+import { useAppSelector } from '../../services/store';
 import PropTypes from 'prop-types';
 import styles from './burger-ingredient-type.module.css';
 import BurgerIngredient from '../burger-ingredient/burger-ingredient';
 import Modal from '../modal/modal';
 import BurgerIngredientCard from '../burger-ingredient-card/burger-ingredient-card';
-import { IgredientsContext } from '../../context/igredients-сontext';
 
 const BurgerIngredientType = ({ type, typeName }: { type: string; typeName: string }) => {
-    const ingredients = useContext(IgredientsContext);
+    const { ingredients } : { ingredients: ingredient[]} = useAppSelector(state => state.burger);
     const [selectedIngredient, setSelectedIngredient] = useState<null | ingredient>(null);
     const ingredientClickHandler = (event: React.MouseEvent, selectedIngredient: ingredient) => {
         event.stopPropagation();

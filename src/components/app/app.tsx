@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../services/store';
 import AppHeader from '../app-header/app-header';
 import AppBody from '../app-body/app-body';
 import styles from './app.module.css';
@@ -6,32 +7,23 @@ import { IgredientsContext } from '../../context/igredients-сontext';
 import Loader from '../loader/loader';
 import Modal from '../modal/modal';
 import { api } from '../api';
+import { getIngredients } from '../../services/reducers/burger';
 
 const App = () => {
-    const [state, setState] = useState({
-        ingredients: [],
-        isLoading: false,
-        hasError: false,
-        isErrorModalOpen: false,
-    });
+    const dispatch = useAppDispatch();
+    const { ingredientsRequest, ingredientsFailed } = useAppSelector(state => state.burger);
 
-    const closeErrorModal = () => {
+    /*const closeErrorModal = () => {
         setState({ ...state, isErrorModalOpen: false });
-    };
+    };*/
 
     useEffect(() => {
-        setState({ ...state, hasError: false, isLoading: true });
-        api.getIngredients()
-            .then((data) => setState({ ...state, ingredients: data.data, isLoading: false }))
-            .catch((error) => {
-                console.log(error);
-                setState({ ...state, hasError: true, isLoading: false, isErrorModalOpen: true });
-            });
-    }, []);
+        dispatch(getIngredients());
+    }, [dispatch]);
 
-    const { ingredients, isLoading, hasError, isErrorModalOpen } = state;
+    // const { ingredients, isLoading, hasError, isErrorModalOpen } = state;
 
-    return (
+    /* return (
         <React.Fragment>
             {isLoading ? (
                 <Loader />
@@ -52,7 +44,13 @@ const App = () => {
                 </div>
             )}
         </React.Fragment>
-    );
+    ); */
+    return (
+        <div className={styles.app}>
+            <AppHeader />
+            <AppBody/>
+        </div>
+    )
 };
 
 export default App;
