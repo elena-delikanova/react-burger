@@ -1,8 +1,8 @@
-import modalOverlayStyles from './modal-overlay.module.css';
+import styles from './modal-overlay.module.css';
 import PropTypes from 'prop-types';
 
 const ModalOverlay = ({ onClose }: { onClose: React.MouseEventHandler }) => {
-    return <div onClick={onClose} className={`${modalOverlayStyles['modal-overlay']}`} />;
+    return <div onClick={onClose} className={`${styles['modal-overlay']}`} />;
 };
 
 ModalOverlay.propTypes = {

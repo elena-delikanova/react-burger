@@ -1,5 +1,5 @@
-import React, { useContext, useState, useReducer } from 'react';
-import burgerConstructorStyles from './burger-constructor.module.css';
+import { useContext, useState, useReducer } from 'react';
+import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -95,8 +95,8 @@ const BurgerConstructor = ({ api }: { api: Api }) => {
 
     return (
         <TotalPriceContext.Provider value={{ totalPriceState, totalPriceDispatcher }}>
-            <section className={`${burgerConstructorStyles['burger-constructor']} pt-25 pb-10 pl-10`}>
-                <section className={`${burgerConstructorStyles['burger-constructor__list']} pb-10`}>
+            <section className={`${styles['burger-constructor']} pt-25 pb-10 pl-10`}>
+                <section className={`${styles['burger-constructor__list']} pb-10`}>
                     {bun && (
                         <div>
                             <ConstructorElement
@@ -109,11 +109,11 @@ const BurgerConstructor = ({ api }: { api: Api }) => {
                             />
                         </div>
                     )}
-                    <ul className={`${burgerConstructorStyles['burger-constructor__fillings']}`}>
+                    <ul className={`${styles['burger-constructor__fillings']}`}>
                         {selectedIngredientsState.ingredients.map((ingredient, index) => {
                             return (
                                 <li
-                                    className={`${burgerConstructorStyles['burger-constructor__filling']} ${
+                                    className={`${styles['burger-constructor__filling']} ${
                                         index === 0 ? '' : 'pt-4'
                                     } pr-2`}
                                     key={ingredient._id}
@@ -147,7 +147,7 @@ const BurgerConstructor = ({ api }: { api: Api }) => {
                         </div>
                     )}
                 </section>
-                <section className={`${burgerConstructorStyles['burger-constructor__total']} pr-4`}>
+                <section className={`${styles['burger-constructor__total']} pr-4`}>
                     <TotalPrice />
                     <Button htmlType="button" type="primary" size="large" onClick={sendOrderHandler}>
                         Оформить заказ

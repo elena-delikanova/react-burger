@@ -1,12 +1,12 @@
-import loaderStyles from './loader.module.css';
+import styles from './loader.module.css';
 
 const Loader = () => {
     return (
-        <div className={`${loaderStyles['loader']}`}>
-            <div className={`${loaderStyles['loader__inner']}`}/>
-            <div className={`${loaderStyles['loader__inner']}`}/>
-            <div className={`${loaderStyles['loader__inner']}`}/>
-            <div className={`${loaderStyles['loader__inner']}`}/>
+        <div className={`${styles['loader']}`}>
+            <div className={`${styles['loader__inner']}`}/>
+            <div className={`${styles['loader__inner']}`}/>
+            <div className={`${styles['loader__inner']}`}/>
+            <div className={`${styles['loader__inner']}`}/>
         </div>
     );
 };
