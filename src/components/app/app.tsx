@@ -3,12 +3,10 @@ import AppHeader from '../app-header/app-header';
 import AppBody from '../app-body/app-body';
 import styles from './app.module.css';
 import { IgredientsContext } from '../../context/igredients-сontext';
-import { API_URL, API_HEADERS } from '../../utils/constants';
-import Api from '../api/api';
 import Loader from '../loader/loader';
 import Modal from '../modal/modal';
+import { api } from '../api';
 
-const api = new Api({ baseUrl: API_URL, headers: API_HEADERS });
 const App = () => {
     const [state, setState] = useState({
         ingredients: [],
@@ -48,7 +46,7 @@ const App = () => {
                         ''
                     ) : (
                         <IgredientsContext.Provider value={ingredients}>
-                            <AppBody api={api} />
+                            <AppBody/>
                         </IgredientsContext.Provider>
                     )}
                 </div>

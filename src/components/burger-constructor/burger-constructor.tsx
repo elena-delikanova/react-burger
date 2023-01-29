@@ -4,7 +4,7 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { IgredientsContext } from '../../context/igredients-сontext';
-import Api from '../api/api';
+import { api } from '../api';
 import TotalPrice from '../total-price/total-price';
 import { TotalPriceContext } from '../../context/total-price-context';
 
@@ -36,7 +36,7 @@ const selectedIngredientsReducer = (
             return state;
     }
 };
-const BurgerConstructor = ({ api }: { api: Api }) => {
+const BurgerConstructor = () => {
     const ingredients: ingredient[] = useContext(IgredientsContext);
     const initialState: { isOrderNeedsBeShown: boolean; orderId: null | number } = {
         isOrderNeedsBeShown: false,
