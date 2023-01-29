@@ -1,14 +1,12 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppHeader from '../app-header/app-header';
 import AppBody from '../app-body/app-body';
-import appStyles from './app.module.css';
+import styles from './app.module.css';
 import { IgredientsContext } from '../../context/igredients-сontext';
-import { API_URL, API_HEADERS } from '../../utils/constants';
-import Api from '../api/api';
 import Loader from '../loader/loader';
 import Modal from '../modal/modal';
+import { api } from '../api';
 
-const api = new Api({ baseUrl: API_URL, headers: API_HEADERS });
 const App = () => {
     const [state, setState] = useState({
         ingredients: [],
@@ -34,11 +32,11 @@ const App = () => {
     const { ingredients, isLoading, hasError, isErrorModalOpen } = state;
 
     return (
-        <IgredientsContext.Provider value={ingredients}>
+        <React.Fragment>
             {isLoading ? (
                 <Loader />
             ) : (
-                <div className={appStyles.app}>
+                <div className={styles.app}>
                     <AppHeader />
                     {hasError && isErrorModalOpen ? (
                         <Modal header={'Ошибка!'} onClose={closeErrorModal}>
@@ -47,11 +45,13 @@ const App = () => {
                     ) : hasError ? (
                         ''
                     ) : (
-                        <AppBody />
+                        <IgredientsContext.Provider value={ingredients}>
+                            <AppBody/>
+                        </IgredientsContext.Provider>
                     )}
                 </div>
             )}
-        </IgredientsContext.Provider>
+        </React.Fragment>
     );
 };
 
