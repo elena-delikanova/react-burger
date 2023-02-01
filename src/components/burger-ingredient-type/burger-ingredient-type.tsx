@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useAppSelector } from '../../services/store';
 import PropTypes from 'prop-types';
 import styles from './burger-ingredient-type.module.css';

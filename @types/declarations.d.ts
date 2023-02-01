@@ -25,7 +25,9 @@ type initialState = {
     ingredientsFailed: boolean,
     selectedInfredients: ingredient[],
     currentIngredient: null,
-    currentOrder: null,
+    currentOrder: null | orderSuccessServiceResponse,
+    orderRequest: boolean,
+    orderFailed: boolean,
 }
 type RootState = ReturnType<typeof import('../src/services/store').getState>;
 type AppDispatch = ReturnType<typeof import('../src/services/store').dispatch>;

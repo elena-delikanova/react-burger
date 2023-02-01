@@ -5,4 +5,6 @@ export const initialState: initialState = {
     selectedInfredients: [],
     currentIngredient: null,
     currentOrder: null,
+    orderRequest: false,
+    orderFailed: false,
 }

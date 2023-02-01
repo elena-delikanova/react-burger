@@ -1,12 +1,13 @@
-import { useState, useReducer } from 'react';
+import { useState, useReducer, useEffect } from 'react';
+import { useAppDispatch } from '../../services/store';
 import { useAppSelector } from '../../services/store';
 import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { api } from '../api';
 import TotalPrice from '../total-price/total-price';
 import { TotalPriceContext } from '../../context/total-price-context';
+import { setOrder } from '../../services/reducers/burger';
 
 const totalPriceReducer = (state: { totalPrice: number }, action: { type: string; changedAmount: number }) => {
     switch (action.type) {
@@ -37,12 +38,20 @@ const selectedIngredientsReducer = (
     }
 };
 const BurgerConstructor = () => {
-    const { ingredients } : { ingredients: ingredient[]} = useAppSelector(state => state.burger);
-    const initialState: { isOrderNeedsBeShown: boolean; orderId: null | number } = {
-        isOrderNeedsBeShown: false,
-        orderId: null,
-    };
-    const [state, setState] = useState(initialState);
+    const dispatch = useAppDispatch();
+    const {
+        ingredients,
+        currentOrder,
+        orderFailed
+    }: { ingredients: ingredient[]; currentOrder: null | orderSuccessServiceResponse, orderFailed: boolean } = useAppSelector(
+        (state) => state.burger,
+    );
+    const [isOrderNeedsBeShown, setIsOrderNeedsBeShown] = useState(false);
+    useEffect(() => {
+        if (!orderFailed) {
+            setIsOrderNeedsBeShown(true);
+        }
+    }, [orderFailed]);
     // КОСТЫЛИ ЧИСТО ДЛЯ ВЕРСТКИ, ПОКА НЕТ РЕАЛЬНЫХ ДАННЫХ
     const bun = ingredients.find((ingredient) => {
         return ingredient.type === 'bun';
@@ -51,10 +60,9 @@ const BurgerConstructor = () => {
         return ingredient.type !== 'bun';
     });
     const allIngredients = (bun ? [bun] : []).concat(selectedIngredients);
-    const [selectedIngredientsState, selectedIngredientsDispatcher] = useReducer(
-        selectedIngredientsReducer,
-        { ingredients: allIngredients },
-    );
+    const [selectedIngredientsState, selectedIngredientsDispatcher] = useReducer(selectedIngredientsReducer, {
+        ingredients: allIngredients,
+    });
     const initialTotalPrice =
         (bun ? bun.price * 2 : 0) +
         ingredients.reduce((price, ingredient) => {
@@ -66,22 +74,15 @@ const BurgerConstructor = () => {
     const [totalPriceState, totalPriceDispatcher] = useReducer(totalPriceReducer, { totalPrice: initialTotalPrice });
 
     const sendOrderHandler = () => {
-        const ingredients = (bun ? [bun._id] : []).concat(
+        const ingredientIdentifiers = (bun ? [bun._id] : []).concat(
             selectedIngredients.map((ingredient) => {
                 return ingredient._id;
             }),
         );
-        api.setOrder({ ingredientIdentifiers: ingredients })
-            .then((data: orderSuccessServiceResponse) => {
-                console.log(data);
-                setState({ ...state, orderId: data.order.number, isOrderNeedsBeShown: true });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        dispatch(setOrder({ ingredientIdentifiers }));
     };
     const closeOrderDetails = () => {
-        setState({ ...state, isOrderNeedsBeShown: false });
+        setIsOrderNeedsBeShown(false);
     };
     const deleteIngredient = (id: string) => {
         const ingredientToDelete = ingredients.find((ingredient) => {
@@ -153,9 +154,9 @@ const BurgerConstructor = () => {
                         Оформить заказ
                     </Button>
                 </section>
-                {state.isOrderNeedsBeShown && state.orderId && (
+                {isOrderNeedsBeShown && currentOrder && currentOrder.success && (
                     <Modal onClose={closeOrderDetails}>
-                        <OrderDetails orderId={state.orderId} />
+                        <OrderDetails orderId={currentOrder.order.number} />
                     </Modal>
                 )}
             </section>
