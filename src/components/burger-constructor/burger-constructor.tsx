@@ -1,4 +1,4 @@
-import { useState, useReducer, useEffect } from 'react';
+import { useReducer } from 'react';
 import { useAppDispatch } from '../../services/store';
 import { useAppSelector } from '../../services/store';
 import styles from './burger-constructor.module.css';
@@ -8,6 +8,7 @@ import { ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-develo
 import TotalPrice from '../total-price/total-price';
 import { TotalPriceContext } from '../../context/total-price-context';
 import { setOrder } from '../../services/reducers/burger';
+import { resetOrderDetails } from '../../services/reducers/burger';
 
 const totalPriceReducer = (state: { totalPrice: number }, action: { type: string; changedAmount: number }) => {
     switch (action.type) {
@@ -46,12 +47,7 @@ const BurgerConstructor = () => {
     }: { ingredients: ingredient[]; currentOrder: null | orderSuccessServiceResponse, orderFailed: boolean } = useAppSelector(
         (state) => state.burger,
     );
-    const [isOrderNeedsBeShown, setIsOrderNeedsBeShown] = useState(false);
-    useEffect(() => {
-        if (!orderFailed) {
-            setIsOrderNeedsBeShown(true);
-        }
-    }, [orderFailed]);
+
     // КОСТЫЛИ ЧИСТО ДЛЯ ВЕРСТКИ, ПОКА НЕТ РЕАЛЬНЫХ ДАННЫХ
     const bun = ingredients.find((ingredient) => {
         return ingredient.type === 'bun';
@@ -82,7 +78,7 @@ const BurgerConstructor = () => {
         dispatch(setOrder({ ingredientIdentifiers }));
     };
     const closeOrderDetails = () => {
-        setIsOrderNeedsBeShown(false);
+        dispatch(resetOrderDetails());
     };
     const deleteIngredient = (id: string) => {
         const ingredientToDelete = ingredients.find((ingredient) => {
@@ -154,7 +150,7 @@ const BurgerConstructor = () => {
                         Оформить заказ
                     </Button>
                 </section>
-                {isOrderNeedsBeShown && currentOrder && currentOrder.success && (
+                {!orderFailed && currentOrder && (
                     <Modal onClose={closeOrderDetails}>
                         <OrderDetails orderId={currentOrder.order.number} />
                     </Modal>

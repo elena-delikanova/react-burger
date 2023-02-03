@@ -2,7 +2,7 @@ export const initialState: initialState = {
     ingredients: [],
     ingredientsRequest: false,
     ingredientsFailed: false,
-    selectedInfredients: [],
+    selectedIngredients: [],
     currentIngredient: null,
     currentOrder: null,
     orderRequest: false,

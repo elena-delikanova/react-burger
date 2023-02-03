@@ -27,7 +27,28 @@ export const setOrder = createAsyncThunk(
 const slice = createSlice({
     name: 'burger',
     initialState,
-    reducers: {},
+    reducers: {
+        resetOrderDetails: (state) => {
+            return {
+                ...state,
+                orderFailed: false,
+                orderRequest: false,
+                currentOrder: null,
+            };
+        },
+        selectIngredient: (state, { payload: ingredient }: PayloadAction<ingredient>) => {
+            return {
+                ...state,
+                currentIngredient: ingredient,
+            }
+        },
+        resetSelectedIngredient: (state) => {
+            return {
+                ...state,
+                currentIngredient: null,
+            };
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getIngredients.pending, (state) => {
@@ -69,6 +90,7 @@ const slice = createSlice({
                     ...state,
                     orderRequest: false,
                     orderFailed: true,
+                    currentOrder: null,
                 };
             });
     },
@@ -77,3 +99,5 @@ const slice = createSlice({
 const { reducer } = slice;
 
 export { reducer };
+
+export const { resetOrderDetails, selectIngredient, resetSelectedIngredient } = slice.actions;

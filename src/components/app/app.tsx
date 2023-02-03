@@ -20,12 +20,6 @@ const App = () => {
         dispatch(getIngredients());
     }, [dispatch]);
 
-    useEffect(() => {
-        if (ingredientsFailed) {
-            setIsErrorModal(true);
-        }
-    }, [ingredientsFailed]);
-
     return (
         <React.Fragment>
             {ingredientsRequest ? (

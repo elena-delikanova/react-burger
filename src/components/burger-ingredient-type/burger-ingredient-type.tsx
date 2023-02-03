@@ -1,20 +1,22 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useAppSelector } from '../../services/store';
 import PropTypes from 'prop-types';
 import styles from './burger-ingredient-type.module.css';
 import BurgerIngredient from '../burger-ingredient/burger-ingredient';
 import Modal from '../modal/modal';
 import BurgerIngredientCard from '../burger-ingredient-card/burger-ingredient-card';
+import { selectIngredient, resetSelectedIngredient } from '../../services/reducers/burger';
+import { useAppDispatch } from '../../services/store';
 
 const BurgerIngredientType = ({ type, typeName }: { type: string; typeName: string }) => {
-    const { ingredients } : { ingredients: ingredient[]} = useAppSelector(state => state.burger);
-    const [selectedIngredient, setSelectedIngredient] = useState<null | ingredient>(null);
+    const dispatch = useAppDispatch();
+    const { ingredients, currentIngredient } : { ingredients: ingredient[], currentIngredient: ingredient} = useAppSelector(state => state.burger);
     const ingredientClickHandler = (event: React.MouseEvent, selectedIngredient: ingredient) => {
         event.stopPropagation();
-        setSelectedIngredient(selectedIngredient);
+        dispatch(selectIngredient(selectedIngredient));
     };
     const closeIngredientCard = () => {
-        setSelectedIngredient(null);
+        dispatch(resetSelectedIngredient());
     };
     const ingredientsWithSelectedType = useMemo(() => {
         return ingredients.filter((ingredient: ingredient) => {
@@ -35,9 +37,9 @@ const BurgerIngredientType = ({ type, typeName }: { type: string; typeName: stri
                     })}
                 </ul>
             </li>
-            {selectedIngredient && (
+            {currentIngredient && (
                 <Modal header="Детали ингредиента" onClose={closeIngredientCard}>
-                    <BurgerIngredientCard ingredient={selectedIngredient} />
+                    <BurgerIngredientCard ingredient={currentIngredient} />
                 </Modal>
             )}
         </React.Fragment>
