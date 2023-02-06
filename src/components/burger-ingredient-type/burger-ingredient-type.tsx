@@ -10,7 +10,8 @@ import { useAppDispatch } from '../../services/store';
 
 const BurgerIngredientType = ({ type, typeName }: { type: string; typeName: string }) => {
     const dispatch = useAppDispatch();
-    const { ingredients, currentIngredient } : { ingredients: ingredient[], currentIngredient: ingredient} = useAppSelector(state => state.burger);
+    const { ingredients, currentIngredient }: { ingredients: ingredient[]; currentIngredient: ingredient } =
+        useAppSelector((state) => state.burger);
     const ingredientClickHandler = (event: React.MouseEvent, selectedIngredient: ingredient) => {
         event.stopPropagation();
         dispatch(selectIngredient(selectedIngredient));

@@ -9,6 +9,7 @@ type ingredient = {
     calories: number;
     price: number;
     type: string;
+    uniqueId?: string;
 };
 
 type orderSuccessServiceResponse = {
@@ -23,11 +24,12 @@ type initialState = {
     ingredients: ingredient[],
     ingredientsRequest: boolean,
     ingredientsFailed: boolean,
-    selectedIngredients: ingredient[],
+    addedIngredients: ingredient[],
     currentIngredient: null | ingredient,
     currentOrder: null | orderSuccessServiceResponse,
     orderRequest: boolean,
     orderFailed: boolean,
+    orderPrice: number,
 }
 type RootState = ReturnType<typeof import('../src/services/store').getState>;
 type AppDispatch = ReturnType<typeof import('../src/services/store').dispatch>;

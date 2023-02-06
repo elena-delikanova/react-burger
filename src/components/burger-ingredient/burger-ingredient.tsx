@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import styles from './burger-ingredient.module.css';
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { IngredientType } from '../../utils/types';
+import { useAppSelector } from '../../services/store';
 
 const BurgerIngredient = ({
     data,
@@ -10,7 +11,11 @@ const BurgerIngredient = ({
     data: ingredient;
     onClick: (event: React.MouseEvent, selectedIngredient: ingredient) => void;
 }) => {
-    const { image, name, price } = data;
+    const addedIngredients: ingredient[] = useAppSelector((state) => state.burger.addedIngredients);
+    const { image, name, price, _id } = data;
+    const counterOfSuchIngredients = addedIngredients.filter((addedIngredient) => {
+        return addedIngredient._id === _id;
+    }).length;
     return (
         <li
             className={`${styles['burger-ingredient__card']}`}
@@ -35,7 +40,7 @@ const BurgerIngredient = ({
                 >
                     {name}
                 </figcaption>
-                <Counter count={1} />
+                <Counter count={counterOfSuchIngredients} />
             </figure>
         </li>
     );

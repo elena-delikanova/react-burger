@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { initialState } from '../initialState';
-
 import { api } from '../../components/api';
+import { BUN_TYPE } from '../../utils/constants';
+import { nanoid } from '@reduxjs/toolkit';
 
 export const getIngredients = createAsyncThunk('burger/getIngredients', async () => {
     const result = await api.getIngredients();
@@ -24,28 +25,66 @@ export const setOrder = createAsyncThunk(
     },
 );
 
+const calculateOrderPrice = (ingredients: ingredient[]) => {
+    const orderPrice = ingredients.reduce((price, ingredient) => {
+        if (ingredient.type === BUN_TYPE) {
+            price += ingredient.price * 2;
+        } else {
+            price += ingredient.price;
+        }
+        return price;
+    }, 0);
+    return orderPrice;
+};
+
 const slice = createSlice({
     name: 'burger',
     initialState,
     reducers: {
-        resetOrderDetails: (state) => {
+        addIngredient: (state, { payload: ingredient }: PayloadAction<ingredient>) => {
+            let updatedAddedIngridients = [...state.addedIngredients];
+            if (ingredient.type === BUN_TYPE) {
+                updatedAddedIngridients = updatedAddedIngridients.filter((addedIngredient) => {
+                    return (addedIngredient.type !== BUN_TYPE);
+                });
+            }
+            updatedAddedIngridients.push({...ingredient, uniqueId: nanoid()});
             return {
                 ...state,
-                orderFailed: false,
-                orderRequest: false,
-                currentOrder: null,
+                addedIngredients: updatedAddedIngridients,
+                orderPrice: calculateOrderPrice(updatedAddedIngridients),
+            };
+        },
+        removeIngredient: (state, { payload: ingredient }: PayloadAction<ingredient>) => {
+            const updatedAddedIngridients = [
+                ...state.addedIngredients.filter((addedIngredient) => {
+                    return addedIngredient.uniqueId !== ingredient.uniqueId;
+                }),
+            ];
+            return {
+                ...state,
+                addedIngredients: updatedAddedIngridients,
+                orderPrice: calculateOrderPrice(updatedAddedIngridients),
             };
         },
         selectIngredient: (state, { payload: ingredient }: PayloadAction<ingredient>) => {
             return {
                 ...state,
                 currentIngredient: ingredient,
-            }
+            };
         },
         resetSelectedIngredient: (state) => {
             return {
                 ...state,
                 currentIngredient: null,
+            };
+        },
+        resetOrderDetails: (state) => {
+            return {
+                ...state,
+                orderFailed: false,
+                orderRequest: false,
+                currentOrder: null,
             };
         },
     },
@@ -100,4 +139,10 @@ const { reducer } = slice;
 
 export { reducer };
 
-export const { resetOrderDetails, selectIngredient, resetSelectedIngredient } = slice.actions;
+export const {
+    resetOrderDetails,
+    selectIngredient,
+    resetSelectedIngredient,
+    addIngredient,
+    removeIngredient,
+} = slice.actions;
