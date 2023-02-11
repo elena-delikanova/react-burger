@@ -3,6 +3,7 @@ import { initialState } from '../initialState';
 import { api } from '../../components/api';
 import { BUN_TYPE } from '../../utils/constants';
 import { nanoid } from '@reduxjs/toolkit';
+import update from 'immutability-helper';
 
 export const getIngredients = createAsyncThunk('burger/getIngredients', async () => {
     const result = await api.getIngredients();
@@ -45,10 +46,10 @@ const slice = createSlice({
             let updatedAddedIngridients = [...state.addedIngredients];
             if (ingredient.type === BUN_TYPE) {
                 updatedAddedIngridients = updatedAddedIngridients.filter((addedIngredient) => {
-                    return (addedIngredient.type !== BUN_TYPE);
+                    return addedIngredient.type !== BUN_TYPE;
                 });
             }
-            updatedAddedIngridients.push({...ingredient, uniqueId: nanoid()});
+            updatedAddedIngridients.push({ ...ingredient, uniqueId: nanoid() });
             return {
                 ...state,
                 addedIngredients: updatedAddedIngridients,
@@ -66,6 +67,22 @@ const slice = createSlice({
                 addedIngredients: updatedAddedIngridients,
                 orderPrice: calculateOrderPrice(updatedAddedIngridients),
             };
+        },
+        moveIngredient: (state, { payload: [draggedIndex, hoveredIndex] }: PayloadAction<[number, number]>) => {
+            if (draggedIndex === hoveredIndex) {
+                return;
+            }
+            const addedIngredients = [...state.addedIngredients];
+            const updatedAddedIngredients = update(addedIngredients, {
+                $splice: [
+                    [draggedIndex, 1],
+                    [hoveredIndex, 0, addedIngredients[draggedIndex]],
+                ]
+            });
+            return {
+                ...state,
+                addedIngredients: updatedAddedIngredients,
+            }
         },
         selectIngredient: (state, { payload: ingredient }: PayloadAction<ingredient>) => {
             return {
@@ -145,4 +162,5 @@ export const {
     resetSelectedIngredient,
     addIngredient,
     removeIngredient,
+    moveIngredient,
 } = slice.actions;
