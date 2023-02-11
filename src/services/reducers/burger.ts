@@ -43,7 +43,7 @@ const slice = createSlice({
     initialState,
     reducers: {
         addIngredient: (state, { payload: ingredient }: PayloadAction<ingredient>) => {
-            let updatedAddedIngridients = [...state.addedIngredients];
+            let updatedAddedIngridients: ingredient[] = [...state.addedIngredients];
             if (ingredient.type === BUN_TYPE) {
                 updatedAddedIngridients = updatedAddedIngridients.filter((addedIngredient) => {
                     return addedIngredient.type !== BUN_TYPE;
@@ -72,8 +72,8 @@ const slice = createSlice({
             if (draggedIndex === hoveredIndex) {
                 return;
             }
-            const addedIngredients = [...state.addedIngredients];
-            const updatedAddedIngredients = update(addedIngredients, {
+            const addedIngredients: ingredient[] = [...state.addedIngredients];
+            const updatedAddedIngredients: ingredient[] = update(addedIngredients, {
                 $splice: [
                     [draggedIndex, 1],
                     [hoveredIndex, 0, addedIngredients[draggedIndex]],
@@ -103,6 +103,18 @@ const slice = createSlice({
                 orderRequest: false,
                 currentOrder: null,
             };
+        },
+        resetAddedIngredients: (state) => {
+            return {
+                ...state,
+                addedIngredients: initialState.addedIngredients,
+            }
+        },
+        resetOrderPrice: (state) => {
+            return {
+                ...state,
+                orderPrice: initialState.orderPrice,
+            }
         },
     },
     extraReducers: (builder) => {
@@ -135,6 +147,9 @@ const slice = createSlice({
                 };
             })
             .addCase(setOrder.fulfilled, (state, { payload: data }: PayloadAction<orderSuccessServiceResponse>) => {
+                /* Хочется явно указать, что мы тут сбрасываем список ингредиентов и стоимость заказа. Но выглядит это стремновато. Нет ли более изящного способа?*/
+                state = slice.caseReducers.resetAddedIngredients(state);
+                state = slice.caseReducers.resetOrderPrice(state);
                 return {
                     ...state,
                     orderRequest: false,
