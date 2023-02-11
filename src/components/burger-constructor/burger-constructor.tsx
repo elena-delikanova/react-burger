@@ -10,7 +10,6 @@ import { resetOrderDetails } from '../../services/reducers/burger';
 import { BUN_TYPE } from '../../utils/constants';
 import { useDrop } from 'react-dnd';
 import BurgerConstructorElement from './burger-constructor-element/burger-constructor-element';
-import { useCallback } from 'react';
 
 const BurgerConstructor = () => {
     const dispatch = useAppDispatch();
@@ -35,13 +34,6 @@ const BurgerConstructor = () => {
         }),
     });
 
-    const bun = addedIngredients.find((ingredient) => {
-        return ingredient.type === BUN_TYPE;
-    });
-    const otherIngredients = addedIngredients.filter((ingredient) => {
-        return ingredient.type !== BUN_TYPE;
-    });
-
     const sendOrderHandler = () => {
         const ingredientIdentifiers = addedIngredients.map((ingredient) => {
             return ingredient._id;
@@ -51,20 +43,25 @@ const BurgerConstructor = () => {
     const closeOrderDetails = () => {
         dispatch(resetOrderDetails());
     };
+
+    const bun = addedIngredients.find((ingredient) => {
+        return ingredient.type === BUN_TYPE;
+    });
+    const otherIngredients = addedIngredients.filter((ingredient) => {
+        return ingredient.type !== BUN_TYPE;
+    });
+
     return (
         <section className={`${styles['burger-constructor']} pt-25 pb-10 pl-10`}>
             <section className={`${styles['burger-constructor__list']} pb-10`} ref={dropTarget}>
                 {bun && (
-                    <div>
-                        <ConstructorElement
-                            text={`${bun.name} (верх)`}
-                            isLocked
-                            price={bun.price}
-                            thumbnail={bun.image}
-                            type="top"
-                            extraClass="ml-8 mb-4"
-                        />
-                    </div>
+                    <BurgerConstructorElement
+                        ingredient={bun}
+                        isLocked
+                        text={`${bun.name} (верх)`}
+                        extraClass="ml-8 mb-4"
+                        type="top"
+                    />
                 )}
                 <ul className={`${styles['burger-constructor__fillings']}`}>
                     {otherIngredients.map((ingredient, index) => {
@@ -73,23 +70,20 @@ const BurgerConstructor = () => {
                                 className={`${styles['burger-constructor__filling']} ${index === 0 ? '' : 'pt-4'} pr-2`}
                                 key={ingredient.uniqueId}
                             >
-                                <BurgerConstructorElement ingredient={ingredient}/>
+                                <BurgerConstructorElement ingredient={ingredient} extraClass="ml-2" />
                             </li>
                         );
                     })}
                 </ul>
 
                 {bun && (
-                    <div>
-                        <ConstructorElement
-                            text={`${bun.name} (низ)`}
-                            isLocked
-                            price={bun.price}
-                            thumbnail={bun.image}
-                            type="bottom"
-                            extraClass="ml-8 mt-4"
-                        />
-                    </div>
+                    <BurgerConstructorElement
+                        ingredient={bun}
+                        isLocked
+                        text={`${bun.name} (низ)`}
+                        extraClass="ml-8 mt-4"
+                        type="bottom"
+                    />
                 )}
             </section>
             <section className={`${styles['burger-constructor__total']} pr-4`}>

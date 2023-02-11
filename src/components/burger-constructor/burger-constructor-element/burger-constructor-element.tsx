@@ -6,10 +6,22 @@ import styles from './burger-constructor-element.module.css';
 import { useRef } from 'react';
 import { useAppSelector } from '../../../services/store';
 
-const BurgerConstructorElement = ({ ingredient }: { ingredient: ingredient }) => {
+const BurgerConstructorElement = ({
+    ingredient,
+    isLocked = false,
+    text,
+    extraClass,
+    type,
+}: {
+    ingredient: ingredient;
+    isLocked?: boolean;
+    text?: string;
+    extraClass?: string;
+    type?: 'top' | 'bottom';
+}) => {
     const dispatch = useAppDispatch();
     const ref = useRef<HTMLDivElement>(null);
-    const addedIngredients: ingredient[] = useAppSelector(state => state.burger.addedIngredients);
+    const addedIngredients: ingredient[] = useAppSelector((state) => state.burger.addedIngredients);
     const currentIndex = addedIngredients.findIndex((addedIngredient) => {
         return addedIngredient.uniqueId === ingredient.uniqueId;
     });
@@ -49,17 +61,23 @@ const BurgerConstructorElement = ({ ingredient }: { ingredient: ingredient }) =>
     });
     dragRef(dropTarget(ref));
     return (
-        <div className={`${styles['burger-constructor-element']}`} ref={ref}>
-            <DragIcon type="primary" />
+        <div className={`${styles['burger-constructor-element']}`} ref={!isLocked ? ref : null}>
+            {!isLocked && <DragIcon type="primary" />}
             <ConstructorElement
                 key={uniqueId}
-                text={name}
+                text={text || name}
                 price={price}
                 thumbnail={image}
-                extraClass="ml-2"
-                handleClose={() => {
-                    dispatch(removeIngredient(ingredient));
-                }}
+                extraClass={extraClass}
+                isLocked={isLocked}
+                type={type}
+                handleClose={
+                    !isLocked
+                        ? () => {
+                              dispatch(removeIngredient(ingredient));
+                          }
+                        : undefined
+                }
             />
         </div>
     );
