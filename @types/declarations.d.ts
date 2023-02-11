@@ -20,16 +20,16 @@ type orderSuccessServiceResponse = {
     success: boolean;
 };
 
+type RequestStatus = 'pending' | 'fulfilled' | 'rejected' | 'idle';
+
 type initialState = {
     ingredients: ingredient[],
-    ingredientsRequest: boolean,
-    ingredientsFailed: boolean,
     addedIngredients: ingredient[],
     currentIngredient: null | ingredient,
     currentOrder: null | orderSuccessServiceResponse,
-    orderRequest: boolean,
-    orderFailed: boolean,
     orderPrice: number,
+    orderRequestStatus: RequestStatus,
+    ingredientsRequestStatus: RequestStatus,
 }
 type RootState = ReturnType<typeof import('../src/services/store').getState>;
 type AppDispatch = ReturnType<typeof import('../src/services/store').dispatch>;

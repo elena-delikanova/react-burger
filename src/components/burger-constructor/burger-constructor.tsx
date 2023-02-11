@@ -5,8 +5,8 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import TotalPrice from '../total-price/total-price';
-import { addIngredient, setOrder } from '../../services/reducers/burger';
-import { resetOrderDetails } from '../../services/reducers/burger';
+import { addIngredient, setOrderRequestStatusIdle } from '../../services/reducers/burger';
+import { setOrder } from '../../services/actions/burger';
 import { BUN_TYPE } from '../../utils/constants';
 import { useDrop } from 'react-dnd';
 import BurgerConstructorElement from './burger-constructor-element/burger-constructor-element';
@@ -16,13 +16,13 @@ const BurgerConstructor = () => {
     const dispatch = useAppDispatch();
     const {
         currentOrder,
-        orderFailed,
         addedIngredients,
+        orderRequestStatus,
     }: {
-        ingredients: ingredient[];
-        currentOrder: null | orderSuccessServiceResponse;
-        orderFailed: boolean;
-        addedIngredients: ingredient[];
+        ingredients: initialState['ingredients'];
+        currentOrder: initialState['currentOrder'];
+        addedIngredients: initialState['addedIngredients'];
+        orderRequestStatus: initialState['orderRequestStatus'];
     } = useAppSelector((state) => state.burger);
 
     const [{ isDragOver }, dropTarget] = useDrop({
@@ -42,7 +42,7 @@ const BurgerConstructor = () => {
         dispatch(setOrder({ ingredientIdentifiers }));
     };
     const closeOrderDetails = () => {
-        dispatch(resetOrderDetails());
+        dispatch(setOrderRequestStatusIdle());
     };
 
     const bun = addedIngredients.find((ingredient) => {
@@ -99,7 +99,7 @@ const BurgerConstructor = () => {
                     Оформить заказ
                 </Button>
             </section>
-            {!orderFailed && currentOrder && (
+            {orderRequestStatus === 'fulfilled' && currentOrder && (
                 <Modal onClose={closeOrderDetails}>
                     <OrderDetails orderId={currentOrder.order.number} />
                 </Modal>

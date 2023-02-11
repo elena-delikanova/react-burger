@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 import AppHeader from '../app-header/app-header';
 import AppBody from '../app-body/app-body';
@@ -6,14 +6,14 @@ import styles from './app.module.css';
 import Loader from '../loader/loader';
 import Modal from '../modal/modal';
 import { getIngredients } from '../../services/reducers/burger';
+import { setIngredientsRequestStatusIdle } from '../../services/reducers/burger';
 
 const App = () => {
     const dispatch = useAppDispatch();
-    const { ingredientsRequest, ingredientsFailed } = useAppSelector((state) => state.burger);
-    const [isErrorModalOpen, setIsErrorModal] = useState(false);
+    const { ingredientsRequestStatus } = useAppSelector((state) => state.burger);
 
     const closeErrorModal = () => {
-        setIsErrorModal(false);
+        dispatch(setIngredientsRequestStatusIdle());
     };
 
     useEffect(() => {
@@ -22,16 +22,16 @@ const App = () => {
 
     return (
         <React.Fragment>
-            {ingredientsRequest ? (
+            {ingredientsRequestStatus === 'pending' ? (
                 <Loader />
             ) : (
                 <div className={styles.app}>
                     <AppHeader />
-                    {ingredientsFailed && isErrorModalOpen ? (
+                    {ingredientsRequestStatus === 'rejected' ? (
                         <Modal header={'Ошибка!'} onClose={closeErrorModal}>
                             <p className="text text_type_main-default pt-4">Попробуйте обновить страницу.</p>
                         </Modal>
-                    ) : ingredientsFailed ? (
+                    ) : ingredientsRequestStatus === 'idle' ? (
                         ''
                     ) : (
                         <AppBody />
