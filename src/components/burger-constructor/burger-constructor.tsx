@@ -95,7 +95,7 @@ const BurgerConstructor = () => {
             </section>
             <section className={cs(styles['burger-constructor__total'], 'pr-4 pt-10')}>
                 <TotalPrice />
-                <Button htmlType="button" type="primary" size="large" onClick={sendOrderHandler}>
+                <Button htmlType="button" type="primary" size="large" disabled={addedIngredients.length === 0} onClick={sendOrderHandler}>
                     Оформить заказ
                 </Button>
             </section>
