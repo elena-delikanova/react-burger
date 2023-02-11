@@ -10,6 +10,14 @@
     grid-template-rows: max-content 1fr max-content;
 }
 
+.burger-constructor__list_isDragHover {
+    border: 1px solid #4C4CFF;
+}
+
+.burger-constructor__list_isEmpty {
+    border: 1px dashed #4C4CFF;
+}
+
 .burger-constructor__fillings {
     margin: 0;
     padding: 0;
