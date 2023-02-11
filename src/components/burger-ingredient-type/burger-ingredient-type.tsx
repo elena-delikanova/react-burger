@@ -8,7 +8,7 @@ import BurgerIngredientCard from '../burger-ingredient-card/burger-ingredient-ca
 import { selectIngredient, resetSelectedIngredient } from '../../services/reducers/burger';
 import { useAppDispatch } from '../../services/store';
 
-const BurgerIngredientType = ({ type, typeName }: { type: string; typeName: string }) => {
+const BurgerIngredientType = React.forwardRef<HTMLLIElement, {type: string, typeName: string}>(({type, typeName}, ref) => {
     const dispatch = useAppDispatch();
     const { ingredients, currentIngredient }: { ingredients: ingredient[]; currentIngredient: ingredient } =
         useAppSelector((state) => state.burger);
@@ -26,7 +26,7 @@ const BurgerIngredientType = ({ type, typeName }: { type: string; typeName: stri
     }, [ingredients, type]);
     return (
         <React.Fragment>
-            <li>
+            <li ref={ref}>
                 <h3 className="text text_type_main-medium">{typeName}</h3>
                 <ul className={`${styles['burger-ingredient-type__list']} pt-6 pb-10 pr-4 pl-4`}>
                     {ingredientsWithSelectedType.map((ingredient: ingredient) => {
@@ -45,7 +45,7 @@ const BurgerIngredientType = ({ type, typeName }: { type: string; typeName: stri
             )}
         </React.Fragment>
     );
-};
+});
 
 BurgerIngredientType.propTypes = {
     type: PropTypes.string.isRequired,
