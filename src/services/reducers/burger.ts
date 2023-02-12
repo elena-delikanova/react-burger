@@ -135,6 +135,7 @@ const slice = createSlice({
                 };
             })
             .addCase(setOrder.rejected, (state) => {
+                state = slice.caseReducers.resetCurrentOrder(state);
                 return {
                     ...state,
                     currentOrder: initialState.currentOrder,
