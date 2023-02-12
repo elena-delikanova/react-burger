@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useDrag, useDrop, XYCoord } from 'react-dnd';
+import { useDrag, useDrop, XYCoord, DragPreviewImage } from 'react-dnd';
 
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import cs from 'classnames';
@@ -30,15 +30,17 @@ const BurgerConstructorElement = ({
 
     const { uniqueId, name, price, image } = ingredient;
 
-    const deleteIngredientHandler = !isLocked ? () => {
-        dispatch(removeIngredient(ingredient));
-    } : undefined;
+    const deleteIngredientHandler = !isLocked
+        ? () => {
+              dispatch(removeIngredient(ingredient));
+          }
+        : undefined;
 
     const currentIndex = addedIngredients.findIndex((addedIngredient) => {
         return addedIngredient.uniqueId === uniqueId;
     });
 
-    const [, dragRef] = useDrag(() => ({
+    const [{ isDragged }, dragRef] = useDrag(() => ({
         type: DND_TYPES.addedIngredient,
         item: { index: currentIndex },
         collect: (monitor) => ({
@@ -46,13 +48,18 @@ const BurgerConstructorElement = ({
         }),
     }));
 
-    const [, dropTarget] = useDrop({
+    const [{ isDragOver }, dropTarget] = useDrop({
         accept: DND_TYPES.addedIngredient,
-        hover(item: draggedAddedIngredient, monitor) {
+        collect(monitor) {
+            return {
+                isDragOver: monitor.isOver(),
+            };
+        },
+        hover(item, monitor) {
             if (!ref.current) {
                 return;
             }
-            const { index: draggedIndex } = item;
+            const { index: draggedIndex } = item as draggedAddedIngredient;
             const hoveredIndex = currentIndex;
             if (draggedIndex === currentIndex) {
                 return;
@@ -68,21 +75,24 @@ const BurgerConstructorElement = ({
                 return;
             }
             dispatch(moveIngredient([draggedIndex, hoveredIndex]));
-            item.index = hoveredIndex;
+            (item as draggedAddedIngredient).index = hoveredIndex;
         },
     });
 
     dragRef(dropTarget(ref));
 
     return (
-        <div className={cs(styles['burger-constructor-element'])} ref={!isLocked ? ref : null}>
+        <div className={cs(styles['burger-constructor-element'], {})} ref={!isLocked ? ref : null}>
             {!isLocked && <DragIcon type="primary" />}
             <ConstructorElement
                 key={uniqueId}
                 text={text || name}
                 price={price}
                 thumbnail={image}
-                extraClass={extraClass}
+                extraClass={cs(extraClass, {
+                    [styles['burger-constructor-element__element_dragged']]: isDragged,
+                    [styles['burger-constructor-element__element_drag-over']]: isDragOver,
+                })}
                 isLocked={isLocked}
                 type={type}
                 handleClose={deleteIngredientHandler}
