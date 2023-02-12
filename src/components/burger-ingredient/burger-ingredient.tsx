@@ -1,52 +1,44 @@
 import React from 'react';
 import { DragPreviewImage, useDrag } from 'react-dnd';
 import PropTypes from 'prop-types';
-import styles from './burger-ingredient.module.css';
+import cs from 'classnames';
+
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { IngredientType } from '../../utils/types';
+
 import { useAppSelector } from '../../services/store';
 
-/*const [{ opacity }, drag, preview] = useDrag(() => ({
-    type: ItemTypes.BOX,
-    collect: (monitor) => ({
-      opacity: monitor.isDragging() ? 0.4 : 1,
-    }),
-  }))
+import { IngredientType } from '../../utils/types';
+import { DND_TYPES } from '../../utils/constants';
 
-  return (
-    <>
-      <DragPreviewImage connect={preview} src={boxImage} />
-      <div ref={drag} style={{ ...style, opacity }}>
-        Drag me to see an image
-      </div>
-    </>
-  )
-*/
+import styles from './burger-ingredient.module.css';
+
 const BurgerIngredient = ({
-    data,
+    ingredient,
     onClick,
 }: {
-    data: ingredient;
+    ingredient: ingredient;
     onClick: (event: React.MouseEvent, selectedIngredient: ingredient) => void;
 }) => {
     const addedIngredients: ingredient[] = useAppSelector((state) => state.burger.addedIngredients);
     const [{ isDragged }, dragRef, preview] = useDrag(() => ({
-        type: 'ingredient',
-        item: data,
+        type: DND_TYPES.ingredient,
+        item: ingredient,
         collect: (monitor) => ({
             isDragged: monitor.isDragging(),
         }),
     }));
-    const { image, name, price, _id } = data;
+    const { image, name, price, _id } = ingredient;
     const counterOfSuchIngredients = addedIngredients.filter((addedIngredient) => {
         return addedIngredient._id === _id;
     }).length;
     return (
         <React.Fragment>
             <li
-                className={`${styles['burger-ingredient__card']} ${isDragged ? 'burger-ingredient__card_dragged' : ''}`}
+                className={cs(styles['burger-ingredient__card'], {
+                    [styles['burger-ingredient__card_dragged']]: isDragged,
+                })}
                 ref={dragRef}
-                onClick={(event) => onClick(event, data)}
+                onClick={(event) => onClick(event, ingredient)}
             >
                 <DragPreviewImage connect={preview} src={image} />
                 <figure className={`${styles['burger-ingredient__item']}`}>
@@ -64,7 +56,7 @@ const BurgerIngredient = ({
                     <figcaption className={`${styles['burger-ingredient__name']} text text_type_main-default`}>
                         {name}
                     </figcaption>
-                    <Counter count={counterOfSuchIngredients} />
+                    {counterOfSuchIngredients && <Counter count={counterOfSuchIngredients} />}
                 </figure>
             </li>
         </React.Fragment>
@@ -72,7 +64,7 @@ const BurgerIngredient = ({
 };
 
 BurgerIngredient.propTypes = {
-    data: PropTypes.shape(IngredientType).isRequired,
+    ingredient: PropTypes.shape(IngredientType).isRequired,
 };
 
 export default BurgerIngredient;

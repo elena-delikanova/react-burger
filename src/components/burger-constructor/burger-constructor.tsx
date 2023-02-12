@@ -1,16 +1,21 @@
-import { useAppDispatch } from '../../services/store';
-import { useAppSelector } from '../../services/store';
-import styles from './burger-constructor.module.css';
+import { useDrop } from 'react-dnd';
+import cs from 'classnames';
+
+import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
+
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import TotalPrice from '../total-price/total-price';
+import BurgerConstructorElement from './burger-constructor-element/burger-constructor-element';
+
+import { useAppDispatch, useAppSelector } from '../../services/store';
+
 import { addIngredient, setOrderRequestStatusIdle } from '../../services/reducers/burger';
 import { setOrder } from '../../services/actions/burger';
-import { BUN_TYPE } from '../../utils/constants';
-import { useDrop } from 'react-dnd';
-import BurgerConstructorElement from './burger-constructor-element/burger-constructor-element';
-import cs from 'classnames';
+
+import { BUN_TYPE, DND_TYPES } from '../../utils/constants';
+
+import styles from './burger-constructor.module.css';
 
 const BurgerConstructor = () => {
     const dispatch = useAppDispatch();
@@ -26,7 +31,7 @@ const BurgerConstructor = () => {
     } = useAppSelector((state) => state.burger);
 
     const [{ isDragOver }, dropTarget] = useDrop({
-        accept: 'ingredient',
+        accept: DND_TYPES.ingredient,
         drop(ingredient: ingredient) {
             dispatch(addIngredient(ingredient));
         },
@@ -95,7 +100,13 @@ const BurgerConstructor = () => {
             </section>
             <section className={cs(styles['burger-constructor__total'], 'pr-4 pt-10')}>
                 <TotalPrice />
-                <Button htmlType="button" type="primary" size="large" disabled={addedIngredients.length === 0} onClick={sendOrderHandler}>
+                <Button
+                    htmlType="button"
+                    type="primary"
+                    size="large"
+                    disabled={addedIngredients.length === 0}
+                    onClick={sendOrderHandler}
+                >
                     Оформить заказ
                 </Button>
             </section>

@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useDrag, useDrop, XYCoord, DragPreviewImage } from 'react-dnd';
+import { useDrag, useDrop, XYCoord } from 'react-dnd';
 
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import cs from 'classnames';

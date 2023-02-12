@@ -9,6 +9,7 @@ import Modal from '../modal/modal';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 import { getIngredients } from '../../services/reducers/burger';
 import { setIngredientsRequestStatusIdle } from '../../services/reducers/burger';
+import { MODAL_NAMES } from '../../utils/constants';
 
 import styles from './app.module.css';
 
@@ -32,7 +33,7 @@ const App = () => {
                 <div className={cs(styles.app)}>
                     <AppHeader />
                     {ingredientsRequestStatus === 'rejected' ? (
-                        <Modal header={'Ошибка!'} onClose={closeErrorModal}>
+                        <Modal header={MODAL_NAMES.error} onClose={closeErrorModal}>
                             <p className={cs('text text_type_main-default pt-4')}>Попробуйте обновить страницу.</p>
                         </Modal>
                     ) : ingredientsRequestStatus === 'idle' ? (
