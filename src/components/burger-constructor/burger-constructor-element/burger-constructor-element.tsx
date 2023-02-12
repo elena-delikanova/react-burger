@@ -1,10 +1,14 @@
-import { useAppDispatch } from '../../../services/store';
-import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { removeIngredient, moveIngredient } from '../../../services/reducers/burger';
-import { useDrag, useDrop, XYCoord } from 'react-dnd';
-import styles from './burger-constructor-element.module.css';
 import { useRef } from 'react';
-import { useAppSelector } from '../../../services/store';
+import { useDrag, useDrop, XYCoord } from 'react-dnd';
+
+import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import cs from 'classnames';
+
+import { useAppSelector, useAppDispatch } from '../../../services/store';
+import { removeIngredient, moveIngredient } from '../../../services/reducers/burger';
+import { DND_TYPES } from '../../../utils/constants';
+
+import styles from './burger-constructor-element.module.css';
 
 const BurgerConstructorElement = ({
     ingredient,
@@ -20,14 +24,22 @@ const BurgerConstructorElement = ({
     type?: 'top' | 'bottom';
 }) => {
     const dispatch = useAppDispatch();
-    const ref = useRef<HTMLDivElement>(null);
     const addedIngredients: ingredient[] = useAppSelector((state) => state.burger.addedIngredients);
-    const currentIndex = addedIngredients.findIndex((addedIngredient) => {
-        return addedIngredient.uniqueId === ingredient.uniqueId;
-    });
+
+    const ref = useRef<HTMLDivElement>(null);
+
     const { uniqueId, name, price, image } = ingredient;
+
+    const deleteIngredientHandler = !isLocked ? () => {
+        dispatch(removeIngredient(ingredient));
+    } : undefined;
+
+    const currentIndex = addedIngredients.findIndex((addedIngredient) => {
+        return addedIngredient.uniqueId === uniqueId;
+    });
+
     const [, dragRef] = useDrag(() => ({
-        type: 'addedIngredient',
+        type: DND_TYPES.addedIngredient,
         item: { index: currentIndex },
         collect: (monitor) => ({
             isDragged: monitor.isDragging(),
@@ -35,12 +47,12 @@ const BurgerConstructorElement = ({
     }));
 
     const [, dropTarget] = useDrop({
-        accept: 'addedIngredient',
-        hover(item, monitor) {
+        accept: DND_TYPES.addedIngredient,
+        hover(item: draggedAddedIngredient, monitor) {
             if (!ref.current) {
                 return;
             }
-            const { index: draggedIndex } = item as { index: number };
+            const { index: draggedIndex } = item;
             const hoveredIndex = currentIndex;
             if (draggedIndex === currentIndex) {
                 return;
@@ -56,12 +68,14 @@ const BurgerConstructorElement = ({
                 return;
             }
             dispatch(moveIngredient([draggedIndex, hoveredIndex]));
-            (item as { index: number }).index = hoveredIndex;
+            item.index = hoveredIndex;
         },
     });
+
     dragRef(dropTarget(ref));
+
     return (
-        <div className={`${styles['burger-constructor-element']}`} ref={!isLocked ? ref : null}>
+        <div className={cs(styles['burger-constructor-element'])} ref={!isLocked ? ref : null}>
             {!isLocked && <DragIcon type="primary" />}
             <ConstructorElement
                 key={uniqueId}
@@ -71,13 +85,7 @@ const BurgerConstructorElement = ({
                 extraClass={extraClass}
                 isLocked={isLocked}
                 type={type}
-                handleClose={
-                    !isLocked
-                        ? () => {
-                              dispatch(removeIngredient(ingredient));
-                          }
-                        : undefined
-                }
+                handleClose={deleteIngredientHandler}
             />
         </div>
     );

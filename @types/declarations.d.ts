@@ -23,13 +23,15 @@ type orderSuccessServiceResponse = {
 type RequestStatus = 'pending' | 'fulfilled' | 'rejected' | 'idle';
 
 type initialState = {
-    ingredients: ingredient[],
-    addedIngredients: ingredient[],
-    currentIngredient: null | ingredient,
-    currentOrder: null | orderSuccessServiceResponse,
-    orderPrice: number,
-    orderRequestStatus: RequestStatus,
-    ingredientsRequestStatus: RequestStatus,
-}
+    ingredients: ingredient[];
+    addedIngredients: ingredient[];
+    currentIngredient: null | ingredient;
+    currentOrder: null | orderSuccessServiceResponse;
+    orderPrice: number;
+    orderRequestStatus: RequestStatus;
+    ingredientsRequestStatus: RequestStatus;
+};
+type draggedAddedIngredient = { index: number };
+
 type RootState = ReturnType<typeof import('../src/services/store').getState>;
 type AppDispatch = ReturnType<typeof import('../src/services/store').dispatch>;

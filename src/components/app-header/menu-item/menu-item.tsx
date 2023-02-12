@@ -1,3 +1,5 @@
+import cs from 'classnames';
+
 import PropTypes from 'prop-types';
 
 const MenuItem = ({
@@ -15,7 +17,9 @@ const MenuItem = ({
     return (
         <li className={className} role="button">
             <Icon type={isActive ? 'primary' : 'secondary'} />
-            <span className={`text text_type_main-default ${!isActive ? 'text_color_inactive' : ''} pl-2`}>{text}</span>
+            <span className={cs('text text_type_main-default', { text_color_inactive: !isActive }, 'pl-2')}>
+                {text}
+            </span>
         </li>
     );
 };
