@@ -8,15 +8,17 @@ export default class Api {
     }
 
     async _request(url: string, options: Record<string, any>) {
-        const res = await fetch(url, options);
-        return this._checkResponse(res);
+        const response = await fetch(url, options);
+        const result = await response.json();
+        return this._checkResponse(result);
     }
 
-    _checkResponse(res: Response) {
-        if (res.ok) {
-            return res.json();
+    _checkResponse(res: any) {
+        if (res.success) {
+            return res;
+        } else {
+            throw new Error(`Ошибка при выполнении запроса: ${res.error}`);
         }
-        return Promise.reject(`Ошибка: ${res.status}`);
     }
 
     getIngredients() {

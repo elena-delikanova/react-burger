@@ -61,12 +61,6 @@ const slice = createSlice({
         resetCurrentOrder: (state) => {
             state.currentOrder = initialState.currentOrder;
         },
-        resetAddedIngredients: (state) => {
-            state.addedIngredients = [...initialState.addedIngredients];
-        },
-        resetOrderPrice: (state) => {
-            state.orderPrice = initialState.orderPrice;
-        },
         setOrderRequestStatusIdle: (state) => {
             state.orderRequestStatus = 'idle';
         },
@@ -91,8 +85,8 @@ const slice = createSlice({
                 state.orderRequestStatus = 'pending';
             })
             .addCase(setOrder.fulfilled, (state, { payload: data }: PayloadAction<orderSuccessServiceResponse>) => {
-                slice.caseReducers.resetAddedIngredients(state);
-                slice.caseReducers.resetOrderPrice(state);
+                state.addedIngredients = [...initialState.addedIngredients];
+                state.orderPrice = initialState.orderPrice;
                 state.orderRequestStatus = 'fulfilled';
                 state.currentOrder = {...data};
             })
