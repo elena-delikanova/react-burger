@@ -24,7 +24,6 @@ export default class Api {
     }
 
     setOrder({ ingredientIdentifiers } : { ingredientIdentifiers: string[]}) {
-        console.log(ingredientIdentifiers)
         return this._request(`${this._baseUrl}/api/orders`, {
             method: 'POST',
             headers: this._headers,

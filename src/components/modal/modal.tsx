@@ -1,8 +1,12 @@
-import ReactDOM from 'react-dom';
 import { useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import cs from 'classnames';
+
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+
 import ModalOverlay from './modal-overlay/modal-overlay';
+
 import styles from './modal.module.css';
 
 const Modal = ({ children, header, onClose }: { children: React.ReactNode; header?: string; onClose: () => void }) => {
@@ -24,17 +28,17 @@ const Modal = ({ children, header, onClose }: { children: React.ReactNode; heade
     });
     return ReactDOM.createPortal(
         <>
-            <div className={`${styles['modal']}`}>
+            <div className={cs(styles['modal'])}>
                 <ModalOverlay onClose={onClose} />
                 <div
-                    className={`${styles['modal__container']} pr-10 pl-10 pt-10 pb-15`}
+                    className={cs(styles['modal__container'], 'pr-10 pl-10 pt-10 pb-15')}
                     ref={modalElementRef}
                     tabIndex={0}
                 >
-                    <div className={`${styles['modal__header-container']}`}>
-                        <h2 className={`${styles['modal__header']} text text_type_main-large`}>{header}</h2>
+                    <div className={cs(styles['modal__header-container'])}>
+                        <h2 className={cs(styles['modal__header'], 'text text_type_main-large')}>{header}</h2>
                         <button
-                            className={`${styles['modal__close-button']}`}
+                            className={cs(styles['modal__close-button'])}
                             aria-label="Закрыть форму"
                             type="button"
                             onClick={onClose}
