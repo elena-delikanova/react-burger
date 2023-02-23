@@ -56,91 +56,50 @@ const slice = createSlice({
             }, 0);
         },
         resetSelectedIngredient: (state) => {
-            return {
-                ...state,
-                currentIngredient: null,
-            };
+            state.currentIngredient = initialState.currentIngredient;
         },
         resetCurrentOrder: (state) => {
-            return {
-                ...state,
-                currentOrder: initialState.currentOrder,
-            };
+            state.currentOrder = initialState.currentOrder;
         },
         resetAddedIngredients: (state) => {
-            return {
-                ...state,
-                addedIngredients: initialState.addedIngredients,
-            }
+            state.addedIngredients = [...initialState.addedIngredients];
         },
         resetOrderPrice: (state) => {
-            return {
-                ...state,
-                orderPrice: initialState.orderPrice,
-            }
+            state.orderPrice = initialState.orderPrice;
         },
         setOrderRequestStatusIdle: (state) => {
-            return {
-                ...state,
-                orderRequestStatus: 'idle',
-            }
+            state.orderRequestStatus = 'idle';
         },
         setIngredientsRequestStatusIdle: (state) => {
-            return {
-                ...state,
-                ingredientsRequestStatus: 'idle',
-            }
+            state.ingredientsRequestStatus = 'idle';
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(getIngredients.pending, (state) => {
-                return {
-                    ...state,
-                    ingredientsRequest: true,
-                    ingredientsRequestStatus: 'pending',
-                };
+                state.ingredientsRequestStatus = 'pending';
             })
             .addCase(getIngredients.fulfilled, (state, { payload: ingredients }: PayloadAction<ingredient[]>) => {
-                return {
-                    ...state,
-                    ingredientsRequest: false,
-                    ingredientsRequestStatus: 'fulfilled',
-                    ingredients,
-                };
+                state.ingredientsRequestStatus = 'fulfilled';
+                state.ingredients = [...ingredients];
             })
             .addCase(getIngredients.rejected, (state) => {
-                return {
-                    ...state,
-                    ingredientsRequest: false,
-                    ingredientsFailed: true,
-                    ingredientsRequestStatus: 'rejected',
-                };
+                state.ingredientsRequestStatus = 'rejected';
             });
         builder
             .addCase(setOrder.pending, (state) => {
-                return {
-                    ...state,
-                    orderRequestStatus: 'pending',
-                };
+                state.orderRequestStatus = 'pending';
             })
             .addCase(setOrder.fulfilled, (state, { payload: data }: PayloadAction<orderSuccessServiceResponse>) => {
-                /* Хочется явно указать, что мы тут сбрасываем список ингредиентов и стоимость заказа. Но выглядит это стремновато. Нет ли более изящного способа?*/
-                state = slice.caseReducers.resetAddedIngredients(state);
-                state = slice.caseReducers.resetOrderPrice(state);
-                return {
-                    ...state,
-                    orderRequestStatus: 'fulfilled',
-                    currentOrder: data,
-                };
+                slice.caseReducers.resetAddedIngredients(state);
+                slice.caseReducers.resetOrderPrice(state);
+                state.orderRequestStatus = 'fulfilled';
+                state.currentOrder = {...data};
             })
             .addCase(setOrder.rejected, (state) => {
-                state = slice.caseReducers.resetCurrentOrder(state);
-                return {
-                    ...state,
-                    currentOrder: initialState.currentOrder,
-                    orderRequestStatus: 'rejected',
-                };
+                slice.caseReducers.resetCurrentOrder(state);
+                state.currentOrder = initialState.currentOrder;
+                state.orderRequestStatus = 'rejected';
             });
     },
 });
