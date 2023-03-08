@@ -7,7 +7,7 @@ import styles from './app-header.module.css';
 
 const AppHeader = () => {
     return (
-        <header className={cs(styles.appHeader, 'text text_type_main-default pt-4 pb-4')}>
+        <header className={cs(styles.appHeader, 'text text_type_main-default mt-4 mb-4 mr-10 ml-10')}>
             <nav className={cs(styles.appHeader__menu)}>
                 <ul className={cs(styles['appHeader__menu-items'])}>
                     <MenuItem
