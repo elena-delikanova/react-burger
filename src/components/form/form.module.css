@@ -1,0 +1,41 @@
+.form__container {
+    height: 430px;
+    width: 480px
+}
+
+.form__header-container {
+    display: flex;
+    justify-content: center;
+}
+
+.form__header {
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form__button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.form__additionalActions-containers {
+    margin: 0;
+    padding-left: 0;
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.form__additionalActions-link {
+    text-decoration: none;
+    color: rgba(76, 76, 255, 1);
+}
